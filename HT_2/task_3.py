@@ -2,5 +2,5 @@
 Напишіть сценарій, який приймає <число> від користувача та роздруковує суму перших <число> додатніх чисел.
 """
 
-number = int(input('Enter a number: '))
-print(sum([*range(1, number + 1)]))
+*number, = range(int(input('Enter a number: ')) + 1)
+print(sum(number))
