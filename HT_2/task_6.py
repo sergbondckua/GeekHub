@@ -2,5 +2,5 @@
 Напишіть сценарій, щоб перевірити, чи введене користувачем значення міститься в групі значень.
 """
 
-print(True if input('Enter a value: ') in [1, 2, 'u', 'a', '4', True] else False)
+print(input('Enter a value: ') in [1, 2, 'u', 'a', '4', True])
 
