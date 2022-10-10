@@ -2,12 +2,5 @@
 Напишіть сценарій, щоб перевірити, чи введене користувачем значення міститься в групі значень.
 """
 
+print(True if input('Enter a value: ') in [1, 2, 'u', 'a', '4', True] else False)
 
-def compare(value):
-    if value in map(str, [1, 2, 'u', 'a', 4, True]):
-        return True
-    return False
-
-
-if __name__ == '__main__':
-    print(compare(input('Enter a value: ')))
