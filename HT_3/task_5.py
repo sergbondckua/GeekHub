@@ -4,8 +4,7 @@ dict_with_duplicates = {'A': 1, 'B': 2, 'C': 3, 'D': 4, 'E': 5, 'F': 1, 'J': 2, 
 dict_without_duplicates = {}
 
 for key, value in dict_with_duplicates.items():
-    if value in dict_without_duplicates.values():
-        continue
-    dict_without_duplicates[key] = value
+    if value not in dict_without_duplicates.values():
+        dict_without_duplicates[key] = value
 
 print(dict_without_duplicates)

@@ -8,7 +8,7 @@ list_of_tuples = [
     ([1], 1, ), ({32, 3}, 'USA', ),
     (1, 2, 2, 4, )
 ]
-user_value = [input('Enter a value: ')]
-print([tuple(list(i)[:-1] + user_value) for i in list_of_tuples])
+user_value = input('Enter a value: ')
+print([(i[:-1] + (user_value, )) for i in list_of_tuples])
 
 
