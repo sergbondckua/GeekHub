@@ -6,9 +6,8 @@ list_of_tuples = [
     (1, '2', 2.3, None, ),
     (True, 'some', 'word', 0, ),
     ([1], 1, ), ({32, 3}, 'USA', ),
-    (1, 2, 2, 4, )
+    (1, 2, 2, 4, ), ()
 ]
+
 user_value = input('Enter a value: ')
-print([(i[:-1] + (user_value, )) for i in list_of_tuples])
-
-
+print([(i[:-1] + (user_value, )) if i else i for i in list_of_tuples])
