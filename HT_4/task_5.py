@@ -10,10 +10,9 @@
 
 def calculator(expression):
     """Just Calc"""
-    operators = ('+', '-', '*', '/', '%', '//', '**')
+    operators = ('+', '-', '**', '//', '%', '/', '*')
     if not any(mark in expression for mark in operators):
         print(f'У виразі має бути присутній один із {operators} операторів')
-        # raise ValueError(f'У виразі має бути присутній один із {operators} операторів')
 
     for mark in operators:
         if mark in expression:
@@ -35,13 +34,9 @@ def calculator(expression):
             except ZeroDivisionError:
                 print('На "0" ділити не можна!')
 
-                # raise ZeroDivisionError('На "0" ділити не можна!')
             except (ValueError, TypeError):
                 print('Неправильно вказаний вираз, має бути 2'
                       ' числа та 1 оператор')
-
-                # raise ValueError('Неправильно вказаний вираз,'
-                #                  'має бути 2 цілих числа та 1 оператор')
 
 
 if __name__ == '__main__':
