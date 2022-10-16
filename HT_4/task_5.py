@@ -18,7 +18,9 @@ def calculator(expression):
     for mark in operators:
         if mark in expression:
             try:
-                left_val, right_val = map(int, expression.split(mark))
+                left_val, right_val = expression.split(mark)
+                left_val = float(left_val) if '.' in left_val else int(left_val)
+                right_val = float(right_val) if '.' in right_val else int(right_val)
                 print(left_val, mark, right_val, '=')
                 process = {
                     '+': lambda x, y: x + y,
@@ -35,7 +37,7 @@ def calculator(expression):
 
                 # raise ZeroDivisionError('На "0" ділити не можна!')
             except (ValueError, TypeError):
-                print('Неправильно вказаний вираз, має бути 2 цілих'
+                print('Неправильно вказаний вираз, має бути 2'
                       ' числа та 1 оператор')
 
                 # raise ValueError('Неправильно вказаний вираз,'
@@ -43,4 +45,5 @@ def calculator(expression):
 
 
 if __name__ == '__main__':
-    print(calculator(input('Введіть математичний вираз (Приклад: 2+2):\n')))
+    user_exp = input('Введіть математичний вираз (Приклад: 2 + 2.3):\n')
+    print(calculator(user_exp))
