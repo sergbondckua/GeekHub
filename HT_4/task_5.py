@@ -8,15 +8,19 @@
 """
 import logging
 
-logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-                    level=logging.INFO)
+logging.basicConfig(
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    level=logging.INFO
+)
 
 
 def calculator(expression):
     """Just Calc"""
     operators = ('+', '-', '**', '//', '%', '/', '*')
     if not any(mark in expression for mark in operators):
-        logging.warning(f'У виразі має бути присутній один із {operators} операторів')
+        logging.warning(
+            f'У виразі має бути присутній один із {operators} операторів'
+        )
         # Тут має бути raise в реалії
 
     for mark in operators:

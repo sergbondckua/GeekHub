@@ -1,6 +1,7 @@
 """
 Наприклад маємо рядок
---> "f98neroi4nr0c3n30irn03ien3c0rfe kdno400we(nw,kowe%00koi!jn35pijnp4 6ij7k5j78p3kj546p4 ->
+--> "f98neroi4nr0c3n30irn03ien3c0rfe
+kdno400we(nw,kowe%00koi!jn35pijnp4 6ij7k5j78p3kj546p4 ->
 просто потицяв по клавi =)
 Створіть ф-цiю, яка буде отримувати довільні рядки
 на зразок цього та яка обробляє наступні випадки:
