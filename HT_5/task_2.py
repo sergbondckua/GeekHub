@@ -13,15 +13,11 @@
 def bank(a, years, percents=10) -> float:
     """ Get dividends"""
 
-    profit = a
-    lst = []
-
     for _ in range(years):
-        profit += profit * percents / 100
-        lst.append(profit)
+        a = a * (1 + (percents / 100))
 
-    print(sum(lst))
-    return round(sum(lst), 2)
+    print(a)
+    return round(a, 2)
 
 
 if __name__ == '__main__':
