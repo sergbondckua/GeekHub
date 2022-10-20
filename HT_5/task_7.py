@@ -30,8 +30,41 @@ def count_element2(lst):
     return solution
 
 
+# Solution #3 with save type()
+def count_element3(lst):
+    """ Count sequence"""
+
+    uniq = []
+    cnt = []
+
+    ls = [i for i in lst if not isinstance(i, bool)]
+    bool_ls = [i for i in lst if isinstance(i, bool)]
+
+    cnt_bool = [(True, bool_ls.count(True)), (False, bool_ls.count(False))]
+
+    for element in ls:
+        if element not in uniq:
+            uniq.append(element)
+
+    for v in range(len(uniq)):
+        count = 0
+        for i in ls:
+            if ls[v] == i:
+                count += 1
+        cnt.append(count)
+
+    tpl = list(zip(uniq, cnt)) + cnt_bool
+    print('#3 Solution: ')
+
+    for i in tpl:
+        print(i[0], ' -> ', i[1])
+
+
 if __name__ == '__main__':
     count_element([1, 1, 'foo', [1, 2], True, 'foo', 1, [1, 2]])
 
     # with import module
     count_element2([1, 1, 'foo', [1, 2], True, 'foo', 1, [1, 2]])
+
+    # solution 3
+    count_element3([0, 0, 1, 'foo', {1, 8}, [1, 2], True, True, False, False, 'foo', 1, [1, 2]])
