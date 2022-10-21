@@ -53,11 +53,13 @@ def count_element3(lst):
                 count += 1
         cnt.append(count)
 
-    tpl = list(zip(uniq, cnt)) + cnt_bool
+    solution = list(zip(uniq, cnt)) + cnt_bool
     print('#3 Solution: ')
 
-    for i in tpl:
+    for i in solution:
         print(i[0], ' -> ', i[1])
+
+    return solution
 
 
 if __name__ == '__main__':
