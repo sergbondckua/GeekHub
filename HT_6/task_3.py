@@ -48,8 +48,7 @@ def validate_login_passwd(login, password):
 
     if not any([char.isupper() for char in password]):
         raise UppercaseCharPasswdException(
-            f"Password must contain an uppercase letter"
-        )
+            "Password must contain an uppercase letter")
     return True
 
 
@@ -69,20 +68,20 @@ if __name__ == '__main__':
     for name, passwd in access_data_list.items():
         try:
             validate_login_passwd(name, passwd)
-        except NameLengthException as ex:
+        except NameLengthException:
             print(
                 f"Name: {name}\nPassword: {passwd}\n"
                 f"Status: Name length problem")
 
-        except NoDigitPasswdException as ex:
+        except NoDigitPasswdException:
             print(f"Name: {name}\nPassword: {passwd}\nStatus: No digit passwd")
 
-        except UppercaseCharPasswdException as ex:
+        except UppercaseCharPasswdException:
             print(
                 f"Name: {name}\nPassword: {passwd}\n"
                 f"Status: No uppercase in password")
 
-        except PasswdLengthException as ex:
+        except PasswdLengthException:
             print(f"Name: {name}\nPassword: {passwd}\nStatus: Short password")
 
         else:

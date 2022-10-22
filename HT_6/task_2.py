@@ -43,9 +43,8 @@ def validate_login_passwd(login, password):
         raise NoDigitPasswdException("Password must have at least one digit")
 
     if not any([char.isupper() for char in password]):
-        raise UppercaseCharPasswdException(
-            f"Password must contain an uppercase letter"
-        )
+        raise UppercaseCharPasswdException("Password must contain an "
+                                           "uppercase letter")
     return True
 
 
@@ -58,7 +57,6 @@ if __name__ == '__main__':
                 pass
             print("\nCongratulations, all is good!")
             break
-            
         except NameLengthException as ex:
             logging.warning(ex)
         except NoDigitPasswdException as ex:
