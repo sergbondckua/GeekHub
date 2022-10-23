@@ -29,9 +29,9 @@ def check_access(username, password, silent=False):
         ("user_4", "passwd_4"),
         ("user_5", "passwd_5")
     ]
-    for _ in access_data:
-        if (username, password) in access_data:
-            return True
+    if (username, password) in access_data:
+        return True
+
     if silent:
         return False
     else:
