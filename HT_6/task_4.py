@@ -26,6 +26,13 @@ MORSE_CODE = {
 }
 
 
+# One-liner favorite practice :)))))
+def morse_code_oneliner(morse_code):
+    """ Accept dots, dashes and spaces, return human-readable message"""
+    return " ".join(["".join(MORSE_CODE[letter] for letter in word.split(" ")) for word in morse_code.strip().split("   ")])
+
+
+# Best practice
 def morse_decode(morse_code=''):
     """ Accept dots, dashes and spaces, return human-readable message"""
     morse_code = morse_code.strip()
@@ -33,14 +40,15 @@ def morse_decode(morse_code=''):
         return False
     else:
         decode = ''
-        lst = morse_code.split('   ')
-        for i in lst:
-            for x in i.split(' '):
-                decode += MORSE_CODE[x]
+        lst = morse_code.strip().split('   ')
+        for word in lst:
+            for letter in word.split(' '):
+                decode += MORSE_CODE.get(letter)
             decode += ' '
         return decode.strip()
 
 
 if __name__ == '__main__':
-    morse = "...---..."
+    morse = ".. ...   .... . .-. ."
     print(morse_decode(morse))
+    print(morse_code_oneliner(morse))
