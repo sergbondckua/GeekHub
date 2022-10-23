@@ -68,21 +68,21 @@ if __name__ == '__main__':
     for name, passwd in access_data_list.items():
         try:
             validate_login_passwd(name, passwd)
-        except NameLengthException:
+        except NameLengthException as ex:
             print(
                 f"Name: {name}\nPassword: {passwd}\n"
-                f"Status: Name length problem")
+                f"Status: {ex}")
 
-        except NoDigitPasswdException:
-            print(f"Name: {name}\nPassword: {passwd}\nStatus: No digit passwd")
+        except NoDigitPasswdException as ex:
+            print(f"Name: {name}\nPassword: {passwd}\nStatus: {ex}")
 
-        except UppercaseCharPasswdException:
+        except UppercaseCharPasswdException as ex:
             print(
                 f"Name: {name}\nPassword: {passwd}\n"
-                f"Status: No uppercase in password")
+                f"Status: {ex}")
 
-        except PasswdLengthException:
-            print(f"Name: {name}\nPassword: {passwd}\nStatus: Short password")
+        except PasswdLengthException as ex:
+            print(f"Name: {name}\nPassword: {passwd}\nStatus: {ex}")
 
         else:
             print(f"Name: {name}\nPassword: {passwd}\nStatus: OK")
