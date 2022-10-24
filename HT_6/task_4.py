@@ -40,7 +40,7 @@ def morse_decode(morse_code=''):
         return False
     else:
         decode = ''
-        lst = morse_code.strip().split('   ')
+        lst = morse_code.split('   ')
         for word in lst:
             for letter in word.split(' '):
                 decode += MORSE_CODE.get(letter)
