@@ -16,43 +16,41 @@
 """
 
 
-def my_range(*args):
-    """Custom range func"""
-    if not args:
-        raise TypeError('Range expected at least 1 argument, got 0')
-
-    if len(args) == 1:
-        num = 0
-        while num != args[0]:
-            yield num
-            if args[0] > 0:
-                num += 1
-            else:
-                num -= 1
-    elif len(args) == 2:
-        num = args[0]
-        while num != args[1]:
-            yield num
-            if args[0] < args[1]:
-                num += 1
-            else:
-                num -= 1
-    elif len(args) == 3:
-        if (args[0] < args[1] and args[2] > 0) or (args[0] > args[1] and args[2] < 0):
-            num = args[0]
-            if num < args[1]:
-                while num < args[1]:
-                    yield num
-                    num += args[2]
-            else:
-                while num > args[1]:
-                    yield num
-                    num += args[2]
-        else:
-            raise Exception("Fail range")
+def my_range(first, second=None, third=None):
+    """ Custom range func """
+    if second is None:
+        if not isinstance(first, int):
+            raise TypeError("Parameter is not an integer")
+        start = 0
+        stop = first
+        step = 1
+    elif third is None:
+        if not isinstance(second, int):
+            raise TypeError("Parameter is not an integer")
+        start = first
+        stop = second
+        step = 1
     else:
-        raise Exception("Overdose args")
-    return None
+        if not isinstance(third, int):
+            raise TypeError("Parameter is not an integer")
+        if third == 0:
+            raise ValueError("Parameter cannot be zero")
+        start = first
+        stop = second
+        step = third
+
+    if (start > stop and step > 0) or (start < stop and step < 0):
+        raise Exception("Fail range: parameters is incorrect")
+
+    num = start
+    if step > 0:
+        while num < stop:
+            yield num
+            num += step
+    elif step < 0:
+        while num > stop:
+            yield num
+            num += step
 
 
 if __name__ == '__main__':
