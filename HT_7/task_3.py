@@ -38,8 +38,9 @@ def my_range(first, second=None, third=None):
         start = first
         stop = second
         step = third
-        if (start > stop and step > 0) or (start < stop and step < 0):
-            raise Exception("Fail range: parameters is incorrect")
+
+    if (start > stop and step > 0) or (start < stop and step < 0):
+        raise Exception("Fail range: parameters is incorrect")
 
     num = start
     if step > 0:
