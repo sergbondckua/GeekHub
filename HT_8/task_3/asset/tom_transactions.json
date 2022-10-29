@@ -12,5 +12,19 @@
         "description": "Withdraw",
         "amount": 8.0,
         "balance": 1.0
+    },
+    {
+        "id": 38350927,
+        "time": 1667070154,
+        "description": "Deposit",
+        "amount": 480.0,
+        "balance": 481.0
+    },
+    {
+        "id": 46443154,
+        "time": 1667070163,
+        "description": "Withdraw",
+        "amount": 3.99,
+        "balance": 477.01
     }
 ]

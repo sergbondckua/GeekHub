@@ -4,6 +4,9 @@ import csv
 import json
 import random
 from datetime import datetime
+from colorama import init, Fore, Back, Style
+
+init(autoreset=True)  # Автоматичне додавання Style.RESET_ALL в кінець print
 
 
 def validate_user_access(func):
@@ -23,6 +26,8 @@ def validate_user_access(func):
 
 def write_statement(client: str, *args, **kwargs):
     """Записує в файл транзакції клієнта"""
+
+    #  Формуємо дані для виписки транзакцій
     data = {
         "id": random.randint(0, 99999999),
         "time": datetime.now().timestamp().__int__(),
@@ -30,6 +35,8 @@ def write_statement(client: str, *args, **kwargs):
         "amount": kwargs["amount"],
         "balance": kwargs["balance"]
     }
+
+    # Читаємо/Оновлюємо/Записуємо до файлу виписки клієнта
     try:
         with open("asset/" + client + "_transactions.json", "r+", encoding="utf-8") as f:
             file_data = json.load(f)
@@ -43,13 +50,16 @@ def write_statement(client: str, *args, **kwargs):
 
 
 @validate_user_access
-def sign_in(login, passwd):
+def sign_in(login: str, passwd: str) -> dict:
     """Повертає словник з даними доступа клієнта"""
-    print(f"\nHello {login.capitalize()}, access successfully\n")
+    print(
+        Fore.CYAN + f"\nHello {login.capitalize()}, "
+                    f"access successfully\n" + Style.RESET_ALL
+    )
     return dict(login=login, password=passwd)
 
 
-def get_balance(client: str):
+def get_balance(client: str) -> int:
     """Отримує баланс клієнта"""
     try:
         with open("asset/" + client + "_balance.txt", "r") as f:
@@ -57,8 +67,8 @@ def get_balance(client: str):
             return balance
     except FileNotFoundError as e:
         with open("asset/" + client + "_balance.txt", "w") as f:
-            balance = "0"
-            f.write(balance)
+            balance = 0
+            f.write(str(balance))
     return 0
 
 
@@ -69,7 +79,9 @@ def make_deposit(client: str) -> tuple:
     new_balance = round(float(current_balance) + deposit, 2)
     with open("asset/" + client + "_balance.txt", "w", encoding="utf-8") as f:
         f.write(str(new_balance))
-        write_statement(client, desc="Deposit", amount=deposit, balance=new_balance)
+        write_statement(
+            client, desc="Deposit", amount=deposit, balance=new_balance
+        )
     return deposit, new_balance
 
 
@@ -81,51 +93,73 @@ def make_withdraw(client: str):
     if new_balance > 0:
         with open("asset/" + client + "_balance.txt", "w", encoding="utf-8") as f:
             f.write(str(new_balance))
-            write_statement(client, desc="Withdraw", amount=amount, balance=new_balance)
+            write_statement(
+                client, desc="Withdraw", amount=amount, balance=new_balance
+            )
         return amount, new_balance
     else:
-        print(f"It is not possible to withdraw ${amount}, "
-              f"your balance: ${get_balance(client)}\n", '####' * 10)
+        print(Fore.RED + f"It is not possible to withdraw "
+                         f"{Fore.BLACK}{Back.RED}${amount}{Style.RESET_ALL}"
+                         f"{Fore.RED}, your balance: {Back.YELLOW}"
+                         f"${get_balance(client)}{Style.RESET_ALL}"
+              )
     return False
 
 
 def start():
-    print("Authorization required: Sign in please")
+    print(
+        Fore.CYAN + "Authorization required: Sign in please!" + Style.RESET_ALL
+    )
     username = input("Enter a username: ")
     password = input("Enter your password: ")
-    client = sign_in('tom', 'q12345')
+    client = sign_in(username, password)
     stop = True
     while stop:
-        choose = input(
-            "CHOOSE AN ITEM:\n[1] - Balance -\n[2] - Deposit -\n"
-            "[3] - Withdraw -\n[4] - EXIT -\n"
-        )
+        choose = input(Fore.LIGHTBLACK_EX +
+                       f"\nCHOOSE AN ITEM:{Style.RESET_ALL}\n"
+                       f"{Fore.YELLOW}[1] - Balance -{Style.RESET_ALL}\n"
+                       f"{Fore.GREEN}[2] - Deposit -{Style.RESET_ALL}\n"
+                       f"{Fore.MAGENTA}[3] - Withdraw -{Style.RESET_ALL}"
+                       f"{Fore.RESET}\n[4] - EXIT -\n" + Style.RESET_ALL
+                       )
         # Select 1
         if choose == "1":
-            print(f"[BALANCE]\n", "####" * 10)
+            print(f"[BALANCE]".center(30, "#"))
             balance = get_balance(client.get('login'))
-            print(f"{client['login'].capitalize()}, "
-                  f"your balance is ${balance}\n", "####" * 10)
+            print(Fore.YELLOW + f"{client['login'].capitalize()}, "
+                                f"your balance is "
+                                f"{Fore.BLACK}{Back.YELLOW}${balance}"
+                  + Style.RESET_ALL)
 
         # Select 2
         elif choose == "2":
-            print("[DEPOSIT]\n", "####" * 10)
+            print("[DEPOSIT]".center(30, "#"))
             deposit = make_deposit(client.get('login'))
-            print(f"{client['login'].capitalize()}, now +${deposit[0]} and "
-                  f"your new balance is ${deposit[1]}\n", "####" * 10)
+            print(Fore.LIGHTGREEN_EX +
+                  f"{client['login'].capitalize()}, "
+                  f"now {Back.LIGHTBLACK_EX}+${deposit[0]}"
+                  f"{Style.RESET_ALL + Fore.LIGHTGREEN_EX} and "
+                  f"your new balance is {Back.LIGHTBLACK_EX}"
+                  f"${deposit[1]}" + Style.RESET_ALL
+                  )
 
         # Select 3
         elif choose == "3":
-            print("[WITHDRAW]\n", "####" * 10)
+            print("[WITHDRAW]".center(30, "#"))
             withdraw = make_withdraw(client.get('login'))
             if withdraw:
-                print(f"{client['login'].capitalize()}, now -${withdraw[0]} and "
-                      f"your new balance is ${withdraw[1]}\n", "####" * 20)
+                print(Fore.LIGHTGREEN_EX +
+                      f"{client['login'].capitalize()}, "
+                      f"now {Back.LIGHTBLACK_EX}-${withdraw[0]}"
+                      f"{Style.RESET_ALL + Fore.LIGHTGREEN_EX} and "
+                      f"your new balance is {Back.LIGHTBLACK_EX}"
+                      f"${withdraw[1]}" + Style.RESET_ALL
+                      )
 
         # Select 4
         elif choose == "4":
-            print("[EXIT]\n", "####" * 10)
-            print(f"Bye-bye, {client['login'].capitalize()}!\n", "####" * 10)
+            print("[EXIT]".center(30, "#"))
+            print(f"Bye-bye, {client['login'].capitalize()}!".center(30, '-'))
             stop = False
 
 
