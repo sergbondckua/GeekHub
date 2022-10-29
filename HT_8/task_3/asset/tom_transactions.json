@@ -1,0 +1,16 @@
+[
+    {
+        "id": 83450591,
+        "time": 1667046401,
+        "description": "Deposit",
+        "amount": 9.0,
+        "balance": 9.0
+    },
+    {
+        "id": 42057802,
+        "time": 1667046493,
+        "description": "Withdraw",
+        "amount": 8.0,
+        "balance": 1.0
+    }
+]
