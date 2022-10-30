@@ -17,8 +17,23 @@ def validate_user_access(func):
         with open("db/users.csv", "r", newline="") as f:
             reader = csv.DictReader(f)
             for row in reader:
-                if row['username'] == login and row['password'] == passwd:
+                if row["username"] == login and row["password"] == passwd:
                     return func(login, passwd, *args, **kwargs)
+
+                # Якщо логін вірний, а пароль ні, даємо ще спроби вводу пароля
+                elif row["username"] == login and row["password"] != passwd:
+                    for attempt in range(2):
+                        if row["password"] == input(
+                                f"Incorrect password, try again: "):
+                            return func(login, passwd, *args, **kwargs)
+                        else:
+                            print(f"Try again, last attempts!")
+                    raise Exception("Access denied!")
+
+            # Якщо логін не знайдено в БД, пропонуємо реєстрацію
+            print(Fore.LIGHTGREEN_EX + "Not found username, need registration")
+            if input("You want sign_up? - yes/no: ").strip() in ["yes", "y"]:
+                return sign_up(row['username'])
             raise Exception("Access denied!")
 
     return wrapper
@@ -47,6 +62,14 @@ def write_statement(client: str, *args, **kwargs):
     except FileNotFoundError:
         with open("asset/" + client + "_transactions.json", "w", encoding="utf-8") as f:
             json.dump([data], f, indent=4)
+
+
+def sign_up(client):
+    """Registration client"""
+    print(Fore.LIGHTRED_EX +
+          "It's still under construction, sorry!...".center(100, '~')
+          )
+    return start()
 
 
 @validate_user_access
@@ -117,10 +140,10 @@ def start():
     while stop:
         choose = input(Fore.LIGHTBLACK_EX +
                        f"\nCHOOSE AN ITEM:{Style.RESET_ALL}\n"
-                       f"{Fore.YELLOW}[1] - Balance -{Style.RESET_ALL}\n"
-                       f"{Fore.GREEN}[2] - Deposit -{Style.RESET_ALL}\n"
-                       f"{Fore.MAGENTA}[3] - Withdraw -{Style.RESET_ALL}"
-                       f"{Fore.RESET}\n[4] - EXIT -\n" + Style.RESET_ALL
+                       f"{Fore.LIGHTYELLOW_EX}[1] - Balance{Style.RESET_ALL}\n"
+                       f"{Fore.GREEN}[2] - Deposit{Style.RESET_ALL}\n"
+                       f"{Fore.MAGENTA}[3] - Withdraw{Style.RESET_ALL}"
+                       f"{Fore.RESET}\n[4] - EXIT\n" + Style.RESET_ALL
                        )
         # Select 1
         if choose == "1":
@@ -161,6 +184,8 @@ def start():
             print("[EXIT]".center(30, "#"))
             print(f"Bye-bye, {client['login'].capitalize()}!".center(30, '-'))
             stop = False
+        else:
+            print(Fore.YELLOW + "Such an item is not on the menu. Try again!")
 
 
 if __name__ == '__main__':
