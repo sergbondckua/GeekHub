@@ -114,8 +114,8 @@ def get_balance(client: str):
 def make_deposit(client: str) -> tuple:
     """Поповнює баланс"""
     current_balance = get_balance(client)
-    deposit = round(abs(float(input("Enter your deposit: $"))), 2)
-    new_balance = round(float(current_balance) + deposit, 2)
+    deposit = abs(int(input("Enter your deposit: $")))
+    new_balance = int(current_balance) + deposit
     with open(f"asset/{client}_balance.txt", "w", encoding="utf-8") as f:
         f.write(str(new_balance))
         write_statement(
@@ -126,9 +126,9 @@ def make_deposit(client: str) -> tuple:
 
 def make_withdraw(client: str):
     """Знімає кошти, зменшує баланс"""
-    amount = round(abs(float(input("What amount to withdraw?: $"))), 2)
+    amount = abs(int(input("What amount to withdraw?: $")))
     current_balance = get_balance(client)
-    new_balance = round(float(current_balance) - amount, 2)
+    new_balance = int(current_balance) - amount
     if new_balance > 0:
         with open(f"asset/{client}_balance.txt", "w", encoding="utf-8") as f:
             f.write(str(new_balance))
