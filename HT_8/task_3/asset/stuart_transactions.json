@@ -1,0 +1,30 @@
+[
+    {
+        "id": 16826348,
+        "time": 1667165849,
+        "description": "Deposit",
+        "amount": 6500.0,
+        "balance": 6500.0
+    },
+    {
+        "id": 83679051,
+        "time": 1667165892,
+        "description": "Withdraw",
+        "amount": -400.49,
+        "balance": 6099.51
+    },
+    {
+        "id": 56676837,
+        "time": 1667165908,
+        "description": "Withdraw",
+        "amount": -123.56,
+        "balance": 5975.95
+    },
+    {
+        "id": 70874840,
+        "time": 1667165920,
+        "description": "Deposit",
+        "amount": 3.99,
+        "balance": 5979.94
+    }
+]

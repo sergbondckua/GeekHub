@@ -28,13 +28,13 @@ def validate_user_access(func):
                                     f"Incorrect password, try again: "):
                                 return func(login, passwd, *args, **kwargs)
                             else:
-                                print(f"Try again, last attempts!")
+                                print(f"Try again, last attempt!")
                         raise Exception("Access denied!")
 
                 # Якщо логін не знайдено в БД, пропонуємо реєстрацію
                 print(Fore.LIGHTGREEN_EX + "Not found username, need registration")
                 if input("You want sign_up? - yes/no: ").strip() in ["yes", "y"]:
-                    return sign_up(row['username'])
+                    return sign_up(login)
                 raise Exception("Access denied!")
         except FileNotFoundError:
             raise FileNotFoundError("Need create users.csv")
@@ -56,23 +56,36 @@ def write_statement(client: str, *args, **kwargs):
 
     # Читаємо/Оновлюємо/Записуємо до файлу виписки клієнта
     try:
-        with open("asset/" + client + "_transactions.json", "r+", encoding="utf-8") as f:
+        with open(f"asset/{client}_transactions.json", "r+", encoding="utf-8") as f:
             file_data = json.load(f)
             file_data.append(data)
 
-        with open("asset/" + client + "_transactions.json", "w", encoding="utf-8") as f:
+        with open(f"asset/{client}_transactions.json", "w", encoding="utf-8") as f:
             json.dump(file_data, f, indent=4)
     except FileNotFoundError:
-        with open("asset/" + client + "_transactions.json", "w", encoding="utf-8") as f:
+        with open(f"asset/{client}_transactions.json", "w", encoding="utf-8") as f:
             json.dump([data], f, indent=4)
 
 
 def sign_up(client):
-    """Registration client"""
-    print(Fore.LIGHTRED_EX +
-          "It's still under construction, sorry!...".center(100, '~')
-          )
-    return start()
+    """Реєстрація нового клієнта"""
+    print(Fore.LIGHTRED_EX + "Registration".center(100, '~'))
+    with open("db/users.csv", "a", encoding="utf-8", newline="") as f:
+        users = csv.DictReader(client)
+        if client in users:
+            print('Name is already registered, try again with unique name')
+            return start()
+        pre_passwd = input(client.capitalize() + ", enter your new password: ")
+        repeat_passwd = input(client.capitalize() + ", repeat your password: ")
+        passwd = pre_passwd if repeat_passwd == pre_passwd else False
+        if not passwd:
+            print("Passwords don't match")
+            return sign_up(client)
+        writer = csv.writer(f)
+        writer.writerow([client, passwd])
+        print(Fore.GREEN + "Wellcome to ATM!".center(100, '~'))
+
+    return sign_in(client, passwd)
 
 
 @validate_user_access
@@ -85,14 +98,14 @@ def sign_in(login: str, passwd: str) -> dict:
     return dict(login=login, password=passwd)
 
 
-def get_balance(client: str) -> int:
+def get_balance(client: str):
     """Отримує баланс клієнта"""
     try:
-        with open("asset/" + client + "_balance.txt", "r") as f:
+        with open(f"asset/{client}_balance.txt", "r") as f:
             balance = f.read()
             return balance
     except FileNotFoundError as e:
-        with open("asset/" + client + "_balance.txt", "w") as f:
+        with open(f"asset/{client}_balance.txt", "w") as f:
             balance = 0
             f.write(str(balance))
     return 0
@@ -103,7 +116,7 @@ def make_deposit(client: str) -> tuple:
     current_balance = get_balance(client)
     deposit = round(abs(float(input("Enter your deposit: $"))), 2)
     new_balance = round(float(current_balance) + deposit, 2)
-    with open("asset/" + client + "_balance.txt", "w", encoding="utf-8") as f:
+    with open(f"asset/{client}_balance.txt", "w", encoding="utf-8") as f:
         f.write(str(new_balance))
         write_statement(
             client, desc="Deposit", amount=deposit, balance=new_balance
@@ -117,10 +130,10 @@ def make_withdraw(client: str):
     current_balance = get_balance(client)
     new_balance = round(float(current_balance) - amount, 2)
     if new_balance > 0:
-        with open("asset/" + client + "_balance.txt", "w", encoding="utf-8") as f:
+        with open(f"asset/{client}_balance.txt", "w", encoding="utf-8") as f:
             f.write(str(new_balance))
             write_statement(
-                client, desc="Withdraw", amount=amount, balance=new_balance
+                client, desc="Withdraw", amount=-amount, balance=new_balance
             )
         return amount, new_balance
     else:
@@ -133,9 +146,7 @@ def make_withdraw(client: str):
 
 
 def start():
-    print(
-        Fore.CYAN + "Authorization required: Sign in please!" + Style.RESET_ALL
-    )
+    print(Fore.CYAN + "Authorization required: Sign in please!")
     username = input("Enter a username: ")
     password = input("Enter your password: ")
     client = sign_in(username, password)
