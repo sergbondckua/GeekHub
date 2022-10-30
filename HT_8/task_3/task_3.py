@@ -14,27 +14,30 @@ def validate_user_access(func):
 
     def wrapper(login: str, passwd: str, *args, **kwargs):
         # Відкриває файл с даними доступу
-        with open("db/users.csv", "r", newline="") as f:
-            reader = csv.DictReader(f)
-            for row in reader:
-                if row["username"] == login and row["password"] == passwd:
-                    return func(login, passwd, *args, **kwargs)
+        try:
+            with open("db/users.csv", "r", newline="") as f:
+                reader = csv.DictReader(f)
+                for row in reader:
+                    if row["username"] == login and row["password"] == passwd:
+                        return func(login, passwd, *args, **kwargs)
 
-                # Якщо логін вірний, а пароль ні, даємо ще спроби вводу пароля
-                elif row["username"] == login and row["password"] != passwd:
-                    for attempt in range(2):
-                        if row["password"] == input(
-                                f"Incorrect password, try again: "):
-                            return func(login, passwd, *args, **kwargs)
-                        else:
-                            print(f"Try again, last attempts!")
-                    raise Exception("Access denied!")
+                    # Якщо логін вірний, а пароль ні, даємо ще спроби вводу пароля
+                    elif row["username"] == login and row["password"] != passwd:
+                        for attempt in range(2):
+                            if row["password"] == input(
+                                    f"Incorrect password, try again: "):
+                                return func(login, passwd, *args, **kwargs)
+                            else:
+                                print(f"Try again, last attempts!")
+                        raise Exception("Access denied!")
 
-            # Якщо логін не знайдено в БД, пропонуємо реєстрацію
-            print(Fore.LIGHTGREEN_EX + "Not found username, need registration")
-            if input("You want sign_up? - yes/no: ").strip() in ["yes", "y"]:
-                return sign_up(row['username'])
-            raise Exception("Access denied!")
+                # Якщо логін не знайдено в БД, пропонуємо реєстрацію
+                print(Fore.LIGHTGREEN_EX + "Not found username, need registration")
+                if input("You want sign_up? - yes/no: ").strip() in ["yes", "y"]:
+                    return sign_up(row['username'])
+                raise Exception("Access denied!")
+        except FileNotFoundError:
+            raise FileNotFoundError("Need create users.csv")
 
     return wrapper
 
