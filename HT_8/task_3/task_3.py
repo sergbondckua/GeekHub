@@ -42,7 +42,7 @@ def validate_user_access(func):
     return wrapper
 
 
-def write_statement(client: str, *args, **kwargs):
+def write_statement(client: str, **kwargs):
     """Записує в файл транзакції клієнта"""
 
     #  Формуємо дані для виписки транзакцій
@@ -104,7 +104,7 @@ def get_balance(client: str):
         with open(f"asset/{client}_balance.txt", "r") as f:
             balance = f.read()
             return balance
-    except FileNotFoundError as e:
+    except FileNotFoundError:
         with open(f"asset/{client}_balance.txt", "w") as f:
             balance = 0
             f.write(str(balance))
