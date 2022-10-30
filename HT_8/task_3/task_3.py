@@ -22,7 +22,7 @@ def validate_user_access(func):
                         return func(login, passwd, *args, **kwargs)
 
                     # Якщо логін вірний, а пароль ні, даємо ще спроби вводу пароля
-                    elif row["username"] == login and row["password"] != passwd:
+                    elif row["username"] == login:
                         for attempt in range(2):
                             if row["password"] == input(
                                     f"Incorrect password, try again: "):
