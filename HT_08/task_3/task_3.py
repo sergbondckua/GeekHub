@@ -166,7 +166,7 @@ def start():
             print(Fore.YELLOW + f"{client['login'].capitalize()}, "
                                 f"your balance is "
                                 f"{Fore.BLACK}{Back.YELLOW}${balance}"
-                  + Style.RESET_ALL)
+                  )
 
         # Select 2
         elif choose == "2":
@@ -177,7 +177,7 @@ def start():
                   f"now {Back.LIGHTBLACK_EX}+${deposit[0]}"
                   f"{Style.RESET_ALL + Fore.LIGHTGREEN_EX} and "
                   f"your new balance is {Back.LIGHTBLACK_EX}"
-                  f"${deposit[1]}" + Style.RESET_ALL
+                  f"${deposit[1]}"
                   )
 
         # Select 3
