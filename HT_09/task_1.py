@@ -109,15 +109,35 @@ def make_deposit(client: str) -> tuple:
         cursor = conn.cursor()
         min_bill = cursor.execute(
             "SELECT MIN(bill) FROM money_bills").fetchone()[0]
+
         current_balance = get_balance(client)
         deposit = abs(int(input("Enter your deposit: $")))
+        new_balance = current_balance
         rest = deposit % min_bill
-        new_balance = current_balance + deposit - rest
-        cursor.execute(
-            f"""UPDATE users SET balance = ?
-                WHERE username = ?""", (new_balance, client))
-        conn.commit()
-        write_statement(client, desc="Deposit", amount=deposit, balance=new_balance)
+
+        if deposit > min_bill:  # Якщо введена сума більша за мінімальну купюру
+            if rest != 0:  # Якщо не кратна мінімальній купюрі
+                new_balance += deposit - rest
+                deposit -= rest
+                print(Fore.RED + f"Bills are not supported, refund: ${rest}")
+
+            cursor.execute(
+                f"""UPDATE users SET balance = ?
+                    WHERE username = ?""", (new_balance, client))
+            conn.commit()
+            write_statement(
+                client, desc="Deposit", amount=deposit, balance=new_balance)
+            print(Fore.LIGHTGREEN_EX +
+                  f"{client.capitalize()}, "
+                  f"now {Back.LIGHTBLACK_EX}+${deposit}"
+                  f"{Style.RESET_ALL + Fore.LIGHTGREEN_EX} and "
+                  f"your new balance is {Back.LIGHTBLACK_EX}"
+                  f"${new_balance}{Style.RESET_ALL}\n"
+                  )
+        else:
+            print(Back.LIGHTRED_EX +
+                  f"Bills are not supported! Refund money: ${deposit}"
+                  f"{Style.RESET_ALL}\n")
         return deposit, new_balance
 
 
@@ -225,13 +245,6 @@ def main():
             elif choose == "2":
                 print("[DEPOSIT]".center(30, "#"))
                 deposit = make_deposit(username)
-                print(Fore.LIGHTGREEN_EX +
-                      f"{username.capitalize()}, "
-                      f"now {Back.LIGHTBLACK_EX}+${deposit[0]}"
-                      f"{Style.RESET_ALL + Fore.LIGHTGREEN_EX} and "
-                      f"your new balance is {Back.LIGHTBLACK_EX}"
-                      f"${deposit[1]}{Style.RESET_ALL}\n"
-                      )
 
             # Select 3
             elif choose == "3":
