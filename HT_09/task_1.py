@@ -12,7 +12,7 @@ conn = sqlite3.connect('atm.db')
 # cursor = conn.cursor()
 
 
-def auth_validate(login: str, passwd=''):
+def auth_validate(login: str, passwd=None):
     """Перевіряє валідність введених даних"""
     try:
         with conn:
@@ -30,7 +30,10 @@ def auth_validate(login: str, passwd=''):
                                             "Input password: "):
                             return True
                         else:
-                            print(f"Try again, {2 - attempt} attempt!")
+                            if attempt < 1:
+                                print(f"Try again, {2 - attempt} attempt!")
+                            elif attempt < 2:
+                                print("Try again, last attempt!")
                     raise Exception("Access denied!")
 
         # Якщо клієнта немає в БД, пропонуємо реєстрацію
