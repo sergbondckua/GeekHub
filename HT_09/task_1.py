@@ -124,6 +124,10 @@ def get_balance(client: str):
         balance = cursor.execute(
             "SELECT balance FROM users WHERE username = :client",
             {"client": client}).fetchone()
+        print(Fore.YELLOW + f"{client.capitalize()}, "
+                            f"your balance is "
+                            f"{Fore.BLACK}{Back.YELLOW}${balance[0]}"
+                            f"{Style.RESET_ALL}\n")
         return balance[0]
 
 
@@ -183,6 +187,12 @@ def make_withdraw(client: str):
                     WHERE username = ?""", (new_balance, client))
             conn.commit()
             write_statement(client, desc="Withdraw", amount=-amount, balance=new_balance)
+            print(Fore.LIGHTGREEN_EX +
+                  f"{client.capitalize()}, "
+                  f"now {Back.LIGHTBLACK_EX}-${amount}"
+                  f"{Style.RESET_ALL + Fore.LIGHTGREEN_EX} and "
+                  f"your new balance is {Back.LIGHTBLACK_EX}"
+                  f"🔻${new_balance}{Style.RESET_ALL}\n")
             return amount, new_balance
     else:
         print(Fore.RED + f"It is not possible to withdraw "
@@ -192,7 +202,6 @@ def make_withdraw(client: str):
                          f"{Fore.RED}, ATM balance: {Back.LIGHTWHITE_EX}"
                          f"${atm_balance}{Style.RESET_ALL}"
               )
-    return None
 
 
 def change_bills(login: str):
@@ -279,20 +288,15 @@ def main():
         while run:
             choose = input(Fore.LIGHTBLACK_EX +
                            f"CHOOSE AN ITEM:{Style.RESET_ALL}\n"
-                           f"{Fore.LIGHTYELLOW_EX}[1] - 📊Balance{Style.RESET_ALL}\n"
-                           f"{Fore.GREEN}[2] - 🔺Deposit{Style.RESET_ALL}\n"
-                           f"{Fore.MAGENTA}[3] - 🔻Withdraw{Style.RESET_ALL}"
-                           f"{Fore.RESET}\n[4] - ❌EXIT\n" + Style.RESET_ALL
+                           f"{Fore.LIGHTYELLOW_EX}1️⃣ - 📊Balance{Style.RESET_ALL}\n"
+                           f"{Fore.GREEN}2️⃣ - 🔺Deposit{Style.RESET_ALL}\n"
+                           f"{Fore.MAGENTA}3️⃣ - 🔻Withdraw{Style.RESET_ALL}"
+                           f"{Fore.RESET}\n4️⃣ - ❌EXIT\n" + Style.RESET_ALL
                            )
             # Select 1
             if choose == "1":
                 print(f"[BALANCE]".center(30, "#"))
-                balance = get_balance(username)
-                print(Fore.YELLOW + f"{username.capitalize()}, "
-                                    f"your balance is "
-                                    f"{Fore.BLACK}{Back.YELLOW}${balance}"
-                                    f"{Style.RESET_ALL}\n"
-                      )
+                get_balance(username)
 
             # Select 2
             elif choose == "2":
@@ -302,15 +306,7 @@ def main():
             # Select 3
             elif choose == "3":
                 print("[WITHDRAW]".center(30, "#"))
-                withdraw = make_withdraw(username)
-                if withdraw:
-                    print(Fore.LIGHTGREEN_EX +
-                          f"{username.capitalize()}, "
-                          f"now {Back.LIGHTBLACK_EX}-${withdraw[0]}"
-                          f"{Style.RESET_ALL + Fore.LIGHTGREEN_EX} and "
-                          f"your new balance is {Back.LIGHTBLACK_EX}"
-                          f"🔻${withdraw[1]}{Style.RESET_ALL}\n"
-                          )
+                make_withdraw(username)
 
             # Select 4
             elif choose == "4":
