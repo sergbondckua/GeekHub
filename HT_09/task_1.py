@@ -34,7 +34,7 @@ def auth_validate(login: str, passwd=''):
                     raise Exception("Access denied!")
 
         # Якщо клієнта немає в БД, пропонуємо реєстрацію
-        print(Fore.LIGHTGREEN_EX + "Not found username, need registration")
+        print(Fore.LIGHTGREEN_EX + f"{login} - available for registration")
         if input("You want sign_up? - yes/no: ").strip() in ["yes", "y"]:
             return sign_up(login)
         raise Exception("Access denied, Bye!")
@@ -58,6 +58,11 @@ def password_validate(client):
     else:
         print(Fore.RED + "Passwords don't match!")
         return password_validate(client)
+
+
+def close(client: str):
+    print(client + ", Bye!")
+    exit()
 
 
 def sign_up(client):
@@ -101,6 +106,14 @@ def write_statement(client: str, **kwargs):
         conn.commit()
 
 
+def get_atm_balance():
+    with conn:
+        cursor = conn.cursor()
+        query = cursor.execute("SELECT * FROM money_bills").fetchall()
+        atm_balance = sum([x[0] * x[1] for x in query])
+    return atm_balance
+
+
 def get_balance(client: str):
     """Отримує баланс клієнта"""
     with conn:
@@ -121,15 +134,16 @@ def make_deposit(client: str) -> tuple:
         current_balance = get_balance(client)
         deposit = abs(int(input(Fore.LIGHTMAGENTA_EX +
                                 "Enter your deposit: $")))
-        new_balance = current_balance
+        new_balance = 0
         rest = deposit % min_bill
 
         if deposit >= min_bill:  # Якщо введена сума більша за мінімальну купюру
             if rest != 0:  # Якщо не кратна мінімальній купюрі
-                new_balance += deposit - rest
+                new_balance = current_balance + deposit - rest
                 deposit -= rest
                 print(Fore.RED + f"Bills are not supported, refund: ${rest}")
-
+            else:
+                new_balance = current_balance + deposit
             cursor.execute(
                 f"""UPDATE users SET balance = ?
                     WHERE username = ?""", (new_balance, client))
@@ -156,12 +170,9 @@ def make_withdraw(client: str):
                            "What amount to withdraw?: $")))
     current_balance = get_balance(client)
     new_balance = current_balance - amount
-    with conn:
-        cursor = conn.cursor()
-        query = cursor.execute("SELECT * FROM money_bills").fetchall()
-        atm_balance = sum([x[0] * x[1] for x in query])
+    atm_balance = get_atm_balance()
 
-    if new_balance > 0 and atm_balance - amount > 0:
+    if new_balance >= 0 and atm_balance - amount >= 0:
         with conn:
             cursor = conn.cursor()
             cursor.execute(
@@ -181,46 +192,67 @@ def make_withdraw(client: str):
     return None
 
 
-def add_bills(login: str):
-    """Add money in ATM"""
+def change_bills(login: str):
+    """Change money in ATM"""
     with conn:
         cursor = conn.cursor()
         money = cursor.execute("SELECT * FROM money_bills").fetchall()
-        add_money = list(map(list, money))
+        add_money = {i[0]: i[1] for i in money}
+        choice = {str(num + 1): bill[0] for num, bill in enumerate(money)}
+        [print(f'press [{num}] --> 💵{bill}') for num, bill in choice.items()]
+        change = input(f"What bill are we changing?: ")
+        choose = choice.get(change)
 
-        for i in range(len(add_money)):
-            add = int(input(Fore.LIGHTMAGENTA_EX +
-                            f"How much to add to this bill? {money[i][0]}: "))
-            add_money[i][1] += abs(add)
-            cursor.execute(
-                "UPDATE money_bills SET count = ? WHERE bill = ?",
-                (add_money[i][1], add_money[i][0])
-            )
-        conn.commit()
+        if choose in [item[0] for item in money]:
+            amount = int(input("What is the amount (use '-' to reduce): "))
+            result = add_money.get(choose) + amount
+            if result < 0:
+                print("Wrong entry, the amount of the bill cannot be negative")
+            else:
+                cursor.execute(
+                    "UPDATE money_bills SET count = ? WHERE bill = ?",
+                    (result, choose)
+                )
+                conn.commit()
+                write_statement(login,
+                                desc="Change money",
+                                amount={choose: amount},
+                                balance={choose: result}
+                                )
+                print(Fore.BLACK + Back.LIGHTYELLOW_EX +
+                      f"Banknote 💵${choose} has been changed to {amount} pcs."
+                      f" Now 💵${choose} total: {result} pcs.")
+        else:
+            print("Not found banknote")
+
+    return staff_menu(login)
 
 
 def revision_bills(login: str):
     """Check money in ATM"""
-    print("Content availability:")
+    print(Fore.BLACK + Back.LIGHTYELLOW_EX +
+          f"ATM balance: ${get_atm_balance()}{Style.RESET_ALL}\n"
+          f"Content availability:")
     with conn:
         cursor = conn.cursor()
         money = cursor.execute("SELECT * FROM money_bills").fetchall()
         for item in money:
             print("💰", item[0], "⇢", item[1], "pcs")
+    return staff_menu(login)
 
 
 def staff_menu(login):
-    choice = input(Fore.LIGHTMAGENTA_EX + "Select:\n"
-                                          "1️⃣ - Add money\n"
-                                          "2️⃣ - Revision money\n"
-                                          "3️⃣ - EXIT\n"
+    choice = input(Fore.LIGHTYELLOW_EX + "Select:\n"
+                                         "1️⃣ - ➕Change money\n"
+                                         "2️⃣ - 💱Revision money\n"
+                                         "3️⃣ - ❌EXIT\n"
                    )
     choices = {
-        "1": add_bills,
+        "1": change_bills,
         "2": revision_bills,
-        "3": False,
+        "3": close,
     }
-    choices[choice](login)
+    choices.get(choice, close)(login)
 
 
 def main():
@@ -230,6 +262,13 @@ def main():
     run = True
 
     if auth_validate(username):
+        with conn:
+            cursor = conn.cursor()
+            staff = cursor.execute(
+                "SELECT staff FROM users WHERE username = :client",
+                {"client": username}).fetchone()
+            if staff[0] == "collector":
+                staff_menu(username)
         print(
             Fore.CYAN + f"\nHello {username.capitalize()}, "
                         f"access successfully\n" + Style.RESET_ALL
