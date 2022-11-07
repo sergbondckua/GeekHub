@@ -280,8 +280,8 @@ def main():
             cursor = conn.cursor()
             staff = cursor.execute(
                 "SELECT staff FROM users WHERE username = :client",
-                {"client": username}).fetchone()
-            if staff[0] == "collector":
+                {"client": username}).fetchone()[0]
+            if staff == "collector":
                 staff_menu(username)
         print(
             Fore.CYAN + f"\nHello {username.capitalize()}, "
