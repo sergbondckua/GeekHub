@@ -1,3 +1,5 @@
+"""Банкомат 2.0"""
+
 import sqlite3
 import json
 import random
@@ -5,14 +7,10 @@ from datetime import datetime
 from colorama import init, Fore, Back, Style
 
 init(autoreset=True)  # Автоматичне додавання Style.RESET_ALL в кінець print
-
 conn = sqlite3.connect('atm.db')
 
 
-# cursor = conn.cursor()
-
-
-def auth_validate(login: str, passwd=None):
+def auth_validate(login: str, passwd=None) -> bool:
     """Перевіряє валідність введених даних"""
     try:
         with conn:
@@ -50,7 +48,7 @@ def auth_validate(login: str, passwd=None):
     return False
 
 
-def password_validate(client):
+def password_validate(client: str) -> str:
     """Checks the match passwords"""
     password_1 = input(Fore.LIGHTMAGENTA_EX +
                        f"Enter your new password for {client}: ")
@@ -64,11 +62,12 @@ def password_validate(client):
 
 
 def close(client: str):
+    """Завершення роботи програми"""
     print(client + ", Bye!")
     exit()
 
 
-def sign_up(client):
+def sign_up(client: str):
     """Реєстрація нового клієнта"""
     print(Fore.LIGHTRED_EX + "Registration".center(100, '~'))
     with conn:
@@ -109,7 +108,8 @@ def write_statement(client: str, **kwargs):
         conn.commit()
 
 
-def get_atm_balance():
+def get_atm_balance() -> int:
+    """Отримує баланс банкомату"""
     with conn:
         cursor = conn.cursor()
         query = cursor.execute("SELECT * FROM money_bills").fetchall()
@@ -117,7 +117,7 @@ def get_atm_balance():
     return atm_balance
 
 
-def get_balance(client: str):
+def get_balance(client: str) -> int:
     """Отримує баланс клієнта"""
     with conn:
         cursor = conn.cursor()
@@ -171,7 +171,7 @@ def make_deposit(client: str) -> tuple:
         return deposit, new_balance
 
 
-def make_withdraw(client: str):
+def make_withdraw(client: str) -> tuple:
     """Знімає кошти, зменшує баланс"""
     amount = abs(int(input(Fore.LIGHTMAGENTA_EX +
                            "What amount to withdraw?: $")))
@@ -219,7 +219,9 @@ def change_bills(login: str):
             amount = int(input("What is the amount (use '-' to reduce): "))
             result = add_money.get(choose) + amount
             if result < 0:
-                print("Wrong entry, the amount of the bill cannot be negative")
+                print(Fore.WHITE + Back.LIGHTRED_EX +
+                      f"Wrong entry, not enough ${choose} banknotes to withdraw. "
+                      f"Available only: {add_money.get(choose)} pcs")
             else:
                 cursor.execute(
                     "UPDATE money_bills SET count = ? WHERE bill = ?",
@@ -253,7 +255,7 @@ def revision_bills(login: str):
     return staff_menu(login)
 
 
-def staff_menu(login):
+def staff_menu(login: str):
     choice = input(Fore.LIGHTYELLOW_EX + "Select:\n"
                                          "1️⃣ - ➕Change money\n"
                                          "2️⃣ - 💱Revision money\n"
@@ -264,7 +266,7 @@ def staff_menu(login):
         "2": revision_bills,
         "3": close,
     }
-    choices.get(choice, close)(login)
+    return choices.get(choice, close)(login)
 
 
 def main():
