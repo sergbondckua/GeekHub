@@ -179,7 +179,7 @@ def make_withdraw(client: str) -> tuple:
     new_balance = current_balance - amount
     atm_balance = get_atm_balance()
 
-    if new_balance >= 0 and atm_balance - amount >= 0:
+    if new_balance >= 0 or atm_balance - amount >= 0:
         with conn:
             cursor = conn.cursor()
             cursor.execute(
