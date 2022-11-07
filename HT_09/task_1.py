@@ -123,12 +123,12 @@ def get_balance(client: str) -> int:
         cursor = conn.cursor()
         balance = cursor.execute(
             "SELECT balance FROM users WHERE username = :client",
-            {"client": client}).fetchone()
+            {"client": client}).fetchone()[0]
         print(Fore.YELLOW + f"{client.capitalize()}, "
                             f"your balance is "
-                            f"{Fore.BLACK}{Back.YELLOW}${balance[0]}"
+                            f"{Fore.BLACK}{Back.YELLOW}${balance}"
                             f"{Style.RESET_ALL}\n")
-        return balance[0]
+        return balance
 
 
 def make_deposit(client: str) -> tuple:
