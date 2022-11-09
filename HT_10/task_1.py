@@ -1,9 +1,11 @@
+"""Банкомат 3.0"""
+
 import sqlite3
 import json
 import random
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 from datetime import datetime
 from colorama import init, Fore, Back, Style
 
@@ -311,19 +313,21 @@ def close():
 # Меню клієнта
 def client_menu(client):
     choice = input("Select:\n"
-                   "1 - Balance\n"
-                   "2 - Deposit\n"
-                   "3 - Withdraw\n"
-                   "4 - Statement\n"
-                   "5 - Log Out\n"
+                   "1️⃣ - Balance\n"
+                   "2️⃣ - Deposit\n"
+                   "3️⃣ - Withdraw\n"
+                   "4️⃣ - Statement\n"
+                   "5️⃣ - Deposit chart\n"
+                   "6️⃣ - Log Out\n"
                    "Make your choice: ")
     choices = {
         "1": get_client_balance_menu,
         "2": make_deposit,
         "3": make_withdraw,
         "4": get_statement,
+        "5": show_plot
     }
-    choices.get(choice, "5")(client) if choices.get(choice) else main()
+    choices.get(choice, "6")(client) if choices.get(choice) else main()
     return client_menu(client)
 
 
@@ -404,23 +408,29 @@ def collector_menu(client):
 
 
 # Test plot
-def show_plot(client):
+def show_plot(client: str):
+    """Показує графік поповнень рахунку"""
     with conn:
         cursor = conn.cursor()
         statement = cursor.execute(
             """SELECT orders FROM statement WHERE username = :client
                 ORDER BY id DESC""",
             {"client": client}).fetchall()
-        total = [json.loads(i[0]) for i in statement]
-        plus = sorted([item["amount"] for item in total if item["description"] == "Deposit"], reverse=True)
-        minus = sorted([item["amount"] for item in total if item["description"] == "Withdraw"], reverse=True)
-        data = {"withdraw": minus}
+    total = [json.loads(i[0]) for i in statement]
+    plus = [i["amount"] for i in total if i["description"] == "Deposit"][::-1]
+
+    if plus:
+        data = {"Deposit": plus}
         df = pd.DataFrame(data)
-        x = np.arange(len(minus))
-        plt.axis([0, len(minus), 0, 1000 if not minus else max(minus)])
+        x = np.arange(len(plus))
+        plt.axis([0, len(plus), 1, 1000 if not plus else max(plus)])
         plt.plot(x, df)
         plt.legend(data, loc=1)
         plt.show()
+    else:
+        print("No deposits found. "
+              "Multiple deposits are required to display the chart")
+    return client_menu(client)
 
 
 def main():
@@ -460,5 +470,4 @@ def main():
 
 if __name__ == '__main__':
     main()
-    # make_withdraw('user1')
-    # show_plot('user1')
+
