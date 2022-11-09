@@ -205,11 +205,10 @@ def withdraw_balance(amount_funds: int) -> list:
         stop = False
         if counter > len(banknotes_load.keys()):
             with conn:
-                with conn:
-                    cursor = conn.cursor()
-                    min_bill = cursor.execute(
-                        "SELECT MIN(bill) "
-                        "FROM money_bills WHERE count > 0").fetchone()[0]
+                cursor = conn.cursor()
+                min_bill = cursor.execute(
+                    "SELECT MIN(bill) "
+                    "FROM money_bills WHERE count > 0").fetchone()[0]
             raise AtmException(
                 "There are no banknotes to issue the specified amount\n"
                 f"Input positive amount which is multiple by ${min_bill}")
@@ -407,7 +406,7 @@ def collector_menu(client):
     return collector_menu(client)
 
 
-# Test plot
+# Try use matplotlib :)
 def show_plot(client: str):
     """Показує графік поповнень рахунку"""
     with conn:
