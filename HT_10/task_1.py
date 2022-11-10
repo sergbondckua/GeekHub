@@ -63,23 +63,25 @@ def validate_same_password(passwd: str) -> str:
         return passwd
     else:
         print(Fore.RED + "Passwords don't match!")
-        new_password = input(Fore.LIGHTMAGENTA_EX +
-                             "Enter new password: ")
-        if validate_diff_passwd(new_password):
-            return validate_same_password(new_password)
+        while True:
+            new_password = input(Fore.LIGHTMAGENTA_EX +
+                                 "Enter new password: ")
+            if validate_diff_passwd(new_password):
+                break
+        return validate_same_password(new_password)
 
 
-def validate_diff_passwd(passwd: str) -> bool:
+def validate_diff_passwd(passwd: str):
     """ Перевірка на складність пароля"""
     if len(passwd) < 8:
         print("Password must be longer than 7 characters")
-        validate_diff_passwd(input("Input other password: "))
+        return False
     elif not any([char.isdigit() for char in passwd]):
         print("Password must have at least one digit")
-        validate_diff_passwd(input("Input other password: "))
+        return False
     elif not any([char.isupper() for char in passwd]):
         print("Password must contain an uppercase letter")
-        validate_diff_passwd(input("Input other password: "))
+        return False
     return True
 
 
@@ -101,7 +103,9 @@ def sign_up(client: str, passwd: str) -> tuple:
                     VALUES (?,?,?,?)""", (client, password, 0, "client")
             )
             conn.commit()
-        print(Fore.GREEN + "Registered done. Wellcome to ATM!".center(100, '~'))
+            print(Fore.GREEN + "Registered done. Wellcome to ATM!".center(100, '~'))
+        else:
+            sign_up(client, input("Input other password: "))
     return client, password
 
 
@@ -469,4 +473,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
