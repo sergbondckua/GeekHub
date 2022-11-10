@@ -42,9 +42,9 @@ def auth_validate(login: str, passwd=None) -> bool | tuple:
                     raise Exception("Access denied!")
 
         # Якщо клієнта немає в БД, пропонуємо реєстрацію
-        print(Fore.LIGHTGREEN_EX + f"{login} - available for registration")
-        if input("You want sign_up? - yes/no: ").strip() in ["yes", "y"]:
-            return sign_up(login, passwd)
+        print(Fore.LIGHTGREEN_EX + f"Input data is not found!")
+        if input("You want Sign up? - yes/no: ").strip() in ["yes", "y"]:
+            return sign_up()
         raise Exception("Access denied, Bye!")
 
     except sqlite3.OperationalError as ex:
@@ -64,8 +64,7 @@ def validate_same_password(passwd: str) -> str:
     else:
         print(Fore.RED + "Passwords don't match!")
         while True:
-            new_password = input(Fore.LIGHTMAGENTA_EX +
-                                 "Enter new password: ")
+            new_password = input(Fore.LIGHTMAGENTA_EX + "Enter new password: ")
             if validate_diff_passwd(new_password):
                 break
         return validate_same_password(new_password)
@@ -85,27 +84,32 @@ def validate_diff_passwd(passwd: str):
     return True
 
 
-def sign_up(client: str, passwd: str) -> tuple:
+def sign_up() -> tuple:
     """Реєстрація нового клієнта"""
     print(Fore.LIGHTRED_EX + "Registration".center(100, '~'))
     with conn:
         cursor = conn.cursor()
         users = cursor.execute("SELECT username FROM users").fetchall()
 
-        if client in [name[0] for name in users]:
-            print('Name is already registered, try again with unique name')
-            return sign_up(input("Input username: "), passwd)
+    client = input("Input username: ")
+    if client in [name[0] for name in users]:
+        print('Name is already registered, try again with unique name')
+        return sign_up()
 
+    while True:
+        passwd = input(Fore.LIGHTMAGENTA_EX + "Enter password: ")
         if validate_diff_passwd(passwd):
-            password = validate_same_password(passwd)
-            cursor.execute(
-                """INSERT INTO users (username, password, balance, staff)
-                    VALUES (?,?,?,?)""", (client, password, 0, "client")
-            )
-            conn.commit()
-            print(Fore.GREEN + "Registered done. Wellcome to ATM!".center(100, '~'))
-        else:
-            sign_up(client, input("Input other password: "))
+            break
+
+    password = validate_same_password(passwd)
+    with conn:
+        cursor.execute(
+            """INSERT INTO users (username, password, balance, staff)
+                VALUES (?,?,?,?)""", (client, password, 0, "client")
+        )
+        conn.commit()
+    print(Fore.GREEN +
+          "Registered done. Wellcome to ATM!".center(100, '~'))
     return client, password
 
 
@@ -448,8 +452,7 @@ def main():
     if choice == "1":
         username, password = get_input_auth()
     elif choice == "2":
-        auth = get_input_auth()
-        username, password = sign_up(auth[0], auth[1])
+        username, password = sign_up()
     else:
         close()
 
