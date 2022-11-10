@@ -207,34 +207,46 @@ def withdraw_balance(amount_funds: int) -> list:
         cursor = conn.cursor()
         query = cursor.execute(
             "SELECT * FROM money_bills ORDER BY bill DESC").fetchall()
-        banknotes_load = {item[0]: item[1] for item in query}
+
+    # список всіх купюр із банкомата
+    kit = [i[0] for i in query for _ in range(i[1])]
+    sums = {0: 0}
+
+    for i in range(1, len(kit)):
+        value = kit[i - 1]  # номінал додаваної купюри
+        new_sums = {}  # зберігає нові суми, при додаванні поточної купюри value
+        for suma in sums.keys():
+            new_sum = suma + value
+            if new_sum > amount_funds:
+                continue
+            elif new_sum not in sums.keys():
+                new_sums[new_sum] = value
+        sums = sums | new_sums  # додаєм (об'єднуємо) значення
+        if amount_funds in sums.keys():
+            break  # одержали потрібну суму
 
     withdraw_banknotes = []
-    counter = 1
-    while sum(withdraw_banknotes) < amount_funds:
-        stop = False
-        if counter > len(banknotes_load.keys()):
-            with conn:
-                cursor = conn.cursor()
-                min_bill = cursor.execute(
-                    "SELECT MIN(bill) "
-                    "FROM money_bills WHERE count > 0").fetchone()[0]
-            raise AtmException(
-                "There are no banknotes to issue the specified amount\n"
-                f"Input positive amount which is multiple by ${min_bill}")
+    if amount_funds not in sums.keys():
+        raise AtmException(
+            "There are no banknotes to issue the specified amount\n")
+    else:
+        rem = amount_funds
+        while rem > 0:
+            withdraw_banknotes.append(sums[rem])
+            rem -= sums[rem]
 
-        for key in banknotes_load.keys():
-            if stop:
-                break
-            elif key + sum(withdraw_banknotes) <= amount_funds and banknotes_load[key] > 0:
-                for k in banknotes_load.keys():
-                    if (amount_funds - sum(withdraw_banknotes) - key) % k == 0 and banknotes_load[k] > 0:
-                        withdraw_banknotes.append(key)
-                        banknotes_load[key] -= 1
-                        stop = True
-                        break
-        counter += 1
-    for bill, count in banknotes_load.items():
+    # словник всіх значень номіналів купюр із БД
+    db_upload = {i[0]: i[1] for i in query}
+
+    # формуємо словник з кількістю номіналів купюр
+    db_out = {i: withdraw_banknotes.count(i) for i in withdraw_banknotes}
+
+    # віднімаємо видані купюри
+    for key, value in db_out.items():
+        db_upload[key] -= value
+
+    # Оновлюємо БД з новим залишком
+    for bill, count in db_upload.items():
         with conn:
             cursor = conn.cursor()
             cursor.execute(
