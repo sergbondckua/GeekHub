@@ -32,7 +32,8 @@ def auth_validate(login: str, passwd=None) -> bool | tuple:
                 if user[0] == login:
                     for attempt in range(3):
                         if user[1] == input(Fore.LIGHTMAGENTA_EX +
-                                            "Wrong password, try again: "):
+                                            "Wrong password, try again: "
+                                            ).strip():
                             return True
                         else:
                             if attempt < 1:
@@ -58,13 +59,14 @@ def auth_validate(login: str, passwd=None) -> bool | tuple:
 def validate_same_password(passwd: str) -> str:
     """Перевірка на однаковість паролів"""
     password_2 = input(Fore.LIGHTMAGENTA_EX +
-                       "Repeat your password: ")
+                       "Repeat your password: ").strip()
     if passwd == password_2:
         return passwd
     else:
         print(Fore.RED + "Passwords don't match!")
         while True:
-            new_password = input(Fore.LIGHTMAGENTA_EX + "Enter new password: ")
+            new_password = input(Fore.LIGHTMAGENTA_EX +
+                                 "Enter new password: ").strip()
             if validate_diff_passwd(new_password):
                 break
         return validate_same_password(new_password)
@@ -91,13 +93,13 @@ def sign_up() -> tuple:
         cursor = conn.cursor()
         users = cursor.execute("SELECT username FROM users").fetchall()
 
-    client = input("Input username: ")
+    client = input("Input username: ").strip()
     if client in [name[0] for name in users]:
         print('Name is already registered, try again with unique name')
         return sign_up()
 
     while True:
-        passwd = input(Fore.LIGHTMAGENTA_EX + "Enter password: ")
+        passwd = input(Fore.LIGHTMAGENTA_EX + "Enter password: ").strip()
         if validate_diff_passwd(passwd):
             break
 
@@ -169,7 +171,7 @@ def make_deposit(client: str) -> tuple:
 
         current_balance = get_balance(client)
         deposit = abs(int(input(Fore.LIGHTMAGENTA_EX +
-                                "Enter your deposit: $")))
+                                "Enter your deposit: $").strip()))
         new_balance = 0
         rest = deposit % min_bill
 
@@ -249,7 +251,7 @@ def make_withdraw(client: str) -> tuple:
         min_bill = cursor.execute(
             "SELECT MIN(bill) FROM money_bills").fetchone()[0]
     amount = abs(int(input(Fore.LIGHTMAGENTA_EX +
-                           "What amount to withdraw?: $")))
+                           "What amount to withdraw?: $").strip()))
     current_balance = get_balance(client)
     new_balance = current_balance - amount
     atm_balance = get_atm_balance()
@@ -306,8 +308,8 @@ def get_statement(client) -> None:
 
 def get_input_auth() -> tuple:
     """Повертає введені дані для авторизації"""
-    username = input("Enter a username : ")
-    password = input("Input password: ")
+    username = input("Enter a username : ").strip()
+    password = input("Input password: ").strip()
     return username, password
 
 
@@ -354,11 +356,12 @@ def change_bills(login: str):
         add_money = {i[0]: i[1] for i in money}
         choice = {str(num + 1): bill[0] for num, bill in enumerate(money)}
         [print(f'press [{num}] --> 💵{bill}') for num, bill in choice.items()]
-        change = input(f"What bill are we changing?: ")
+        change = input(f"What bill are we changing?: ").strip()
         choose = choice.get(change)
 
         if choose in [item[0] for item in money]:
-            amount = int(input("What is the amount (use '-' to reduce): "))
+            amount = int(input(
+                "What is the amount (use '-' to reduce): ").strip())
             result = add_money.get(choose) + amount
             if result < 0:
                 print(Fore.WHITE + Back.LIGHTRED_EX +
@@ -448,7 +451,7 @@ def main():
                    "1 - Sign In\n"
                    "2 - Sign Up\n"
                    "3 - Exit\n"
-                   "Make your choice: ")
+                   "Make your choice: ").strip()
     if choice == "1":
         username, password = get_input_auth()
     elif choice == "2":
