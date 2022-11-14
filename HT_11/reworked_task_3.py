@@ -100,7 +100,8 @@ class Atm:
 
     def get_all_statements(self) -> list:
         """Повертає всю виписку всіх транзакцій"""
-        query = self.cursor.execute("""SELECT * FROM statement ORDER BY id DESC """).fetchall()
+        query = self.cursor.execute(
+            """SELECT * FROM statement ORDER BY id DESC """).fetchall()
         return [i for i in query]
 
     def get_user_statement(self) -> list:
@@ -399,7 +400,8 @@ class Menu:
 
         if choice == "1":
             print(Fore.BLACK + Back.LIGHTYELLOW_EX +
-                  f"ATM balance: ${self.client.get_atm_balance()}{Style.RESET_ALL}\n"
+                  f"ATM balance: "
+                  f"${self.client.get_atm_balance()}{Style.RESET_ALL}\n"
                   f"Content availability:")
             for bill, count in self.client.dict_nominal().items():
                 print("💰", bill, "⇢", count, "pcs")
