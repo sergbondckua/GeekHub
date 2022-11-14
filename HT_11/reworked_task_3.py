@@ -1,4 +1,4 @@
-"""Банкомат 3.0"""
+"""Банкомат 4.0"""
 
 import sqlite3
 import json
