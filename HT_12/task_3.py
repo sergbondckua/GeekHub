@@ -13,7 +13,6 @@ class CountsClassInstances:
 
 
 if __name__ == '__main__':
-
     first = CountsClassInstances()
     second = CountsClassInstances()
     third = CountsClassInstances()
