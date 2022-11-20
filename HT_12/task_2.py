@@ -63,7 +63,7 @@ class Magazine(Book):
 
 
 class FeedbackMixin:
-    """Записує відгук про бібліотеку"""
+    """Записує відгук"""
 
     @staticmethod
     def add_feedback(text: str) -> str:
