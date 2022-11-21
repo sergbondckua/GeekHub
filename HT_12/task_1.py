@@ -16,21 +16,28 @@ class Figure:
 
 class Oval(Figure):
     """Субклас, овал"""
-    def __init__(self, size: int):
-        self.size = size
+
+    def __init__(self, size_long: int, size_width: int):
+        self.size_width = size_width
+        self.size_long = size_long
 
     def print_info(self):
-        print(f"Color: {self.color}\nSize: {self.size}")
+        print(f"Color: {self.color}\nSize: {self.size_long, self.size_width}")
 
 
-class Square(Oval):
+class Square(Figure):
     """Квадрат"""
-    pass
+
+    def __init__(self, size_side: int):
+        self.size_side = size_side
+
+    def print_info(self):
+        print(f"Color: {self.color}\nSize: {self.size_side}")
 
 
 if __name__ == '__main__':
     # Oval
-    Oval(12).print_info()
+    Oval(12, 4).print_info()
 
     # Square
     fig_1 = Square(5)

@@ -183,7 +183,7 @@ student.add_feedback("Good feedback for employees")  # Залишає відгу
 print(40 * "#".center(2), "\n")
 
 # Teacher
-teacher = Teacher("Mary", "Jane", "History")  # Вчителька історії, Марі Джейн
+teacher = Teacher("Mary", "Jane", "History")  # Вчителька історії, Мері Джейн
 teacher.print_info()  # Інформація про вчителя
-print(student.view())  # Видання, для вчителів
+print(teacher.view())  # Видання, для вчителів
 teacher.take(4)  # Взяти обранє з бібліотеки

@@ -14,7 +14,12 @@ class CountsClassInstances:
 
 if __name__ == '__main__':
     first = CountsClassInstances()
+    print(first.count)
+
     second = CountsClassInstances()
+    print(second.count)
+
     third = CountsClassInstances()
+    print(third.count)
 
     print(CountsClassInstances().count)
