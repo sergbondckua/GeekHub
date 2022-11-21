@@ -17,7 +17,6 @@ class SqlConfig:
 
 
 class Book(SqlConfig):
-    _role = "student"
 
     def __init__(self, title, author: str):
         self.author = author
