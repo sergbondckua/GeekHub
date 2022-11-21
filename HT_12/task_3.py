@@ -11,15 +11,16 @@ class CountsClassInstances:
     def __init__(self):
         self.__class__.count += 1
 
+    def __str__(self):
+        return str(self.count)
+
 
 if __name__ == '__main__':
     first = CountsClassInstances()
-    print(first.count)
+    print(first)
 
     second = CountsClassInstances()
-    print(second.count)
+    print(second)
 
     third = CountsClassInstances()
-    print(third.count)
-
-    print(CountsClassInstances().count)
+    print(third)
