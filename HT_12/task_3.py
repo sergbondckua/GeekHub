@@ -9,7 +9,7 @@ class CountsClassInstances:
     count = 0
 
     def __init__(self):
-        self.__class__.count += 1
+        CountsClassInstances.count += 1
 
     def __str__(self):
         return str(self.count)
