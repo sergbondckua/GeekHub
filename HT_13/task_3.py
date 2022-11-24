@@ -49,10 +49,6 @@ class Transaction:
         return self._usd_conversion_rate
 
     @property
-    def currency(self):
-        return self._currency
-
-    @property
     def amount(self):
         return self._amount
 
