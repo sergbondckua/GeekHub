@@ -11,12 +11,12 @@ from functools import total_ordering
 class Car:
     """Порівняння властивостей"""
 
+    def __init__(self, release_year: int):
+        self.release_year = release_year
+
     def __eq__(self, other):
         return self.release_year == other.release_year and \
                other.release_year == self.release_year
-
-    def __init__(self, release_year: int):
-        self.release_year = release_year
 
     def __lt__(self, other):
         return self.release_year > other.release_year

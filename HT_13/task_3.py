@@ -56,6 +56,7 @@ class Transaction:
     def amount(self):
         return self._amount
 
+    @property
     def usd(self) -> float:
         """Конвертація суми в USD"""
         return round(self._amount * self._usd_conversion_rate, 2)
@@ -71,4 +72,4 @@ if __name__ == '__main__':
               f"Дата: {instance.date}\n"
               f"Курс USD: {instance.usd_conversion_rate}\n"
               f"Призначення: {instance.description}\n"
-              f"Сума в USD: ${instance.usd()}\n" + 20 * "=+".center(2))
+              f"Сума в USD: ${instance.usd}\n" + 20 * "=+".center(2))
