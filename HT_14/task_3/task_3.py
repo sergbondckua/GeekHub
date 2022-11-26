@@ -59,7 +59,7 @@ def get_author_about(url: str) -> list:
     with open("scraper.csv", "w") as file:
         csv_writer = csv.writer(file)
         csv_writer.writerow(
-            ('Id', "Quote", 'Name', 'DoB', 'Place', 'Description'))
+            ("Id", "Quote", "Name", "DoB", "Place", "Description"))
         csv_writer.writerows(all_info)
 
     return all_info
