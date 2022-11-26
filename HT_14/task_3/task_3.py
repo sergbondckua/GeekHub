@@ -23,13 +23,17 @@ headers = {
 def get_author_about(url: str) -> list:
     link = url
     all_info = []
+    num = 0
     s = requests.Session()
     while True:
         response = s.get(url=link, headers=headers)
         soup = BeautifulSoup(response.content, "lxml")
         quotes = soup.find_all("div", class_="quote")
-        for num, quote in enumerate(quotes):
-            text = quote.find_next("span", class_="text").text.strip()
+        for quote in quotes:
+            num += 1
+            # logging.info(f"{num} Loading")
+            print("\r", f"Load {num}%", num * "#".rjust(1), end="")
+            text = quote.find_next("span", class_="text").text.strip('“”')
             author = quote.find_next("small", class_="author").text.strip()
             about_link = url + quote.find_next("a").get("href")
             author_page = s.get(url=about_link, headers=headers)
@@ -44,7 +48,7 @@ def get_author_about(url: str) -> list:
 
             # Generate list
             all_info.append(
-                [num + 1, text, author, born_date, born_place, descript])
+                [num, text, author, born_date, born_place, descript])
         if soup.find("li", class_="next"):
             page_link = soup.find("li", class_="next").find('a').get("href")
             link = url + page_link
@@ -54,7 +58,8 @@ def get_author_about(url: str) -> list:
     # Save to file CSV
     with open("scraper.csv", "w") as file:
         csv_writer = csv.writer(file)
-        csv_writer.writerow(('Id', 'Name', 'DoB', 'Place', 'Description'))
+        csv_writer.writerow(
+            ('Id', "Quote", 'Name', 'DoB', 'Place', 'Description'))
         csv_writer.writerows(all_info)
 
     return all_info
