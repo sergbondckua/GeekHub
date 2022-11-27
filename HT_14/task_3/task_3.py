@@ -1,12 +1,12 @@
 """
 https://quotes.toscrape.com/ - написати скрепер для збору всієї доступної
-інформації про записи: цитата, автор, інфа про автора тощо.
+інформації про записи: цитата, автор, інформація про автора тощо.
 - збирається інформація з 10 сторінок сайту.
 - зберігати зібрані дані у CSV файл
 """
-
-import requests
 import csv
+import requests
+
 from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
 
@@ -21,12 +21,13 @@ headers = {
 
 
 def get_author_about(url: str) -> list:
+    """Scrape quote and the author information"""
     link = url
     all_info = []
     num = 0
-    s = requests.Session()
+    session = requests.Session()
     while True:
-        response = s.get(url=link, headers=headers)
+        response = session.get(url=link, headers=headers)
         soup = BeautifulSoup(response.content, "lxml")
         quotes = soup.find_all("div", class_="quote")
         for quote in quotes:
@@ -35,7 +36,7 @@ def get_author_about(url: str) -> list:
             text = quote.find_next("span", class_="text").text.strip('“”')
             author = quote.find_next("small", class_="author").text.strip()
             about_link = url + quote.find_next("a").get("href")
-            author_page = s.get(url=about_link, headers=headers)
+            author_page = session.get(url=about_link, headers=headers)
             author_soup = BeautifulSoup(author_page.content, "lxml")
             born_date = author_soup.find(
                 "span", class_="author-born-date").text.strip()
@@ -54,18 +55,18 @@ def get_author_about(url: str) -> list:
         else:
             break
 
-    # Save to file CSV
-    with open("scraper.csv", "w") as file:
-        csv_writer = csv.writer(file)
-        csv_writer.writerow(
-            ("Id", "Quote", "Name", "DoB", "Place", "Description"))
-        csv_writer.writerows(all_info)
-
     return all_info
 
 
 def main():
-    get_author_about(url=URL)
+    """Main function"""
+    all_info = get_author_about(URL)
+    # Save to file CSV
+    with open("scraper.csv", "w", encoding="UTF-8") as file:
+        csv_writer = csv.writer(file)
+        csv_writer.writerow(
+            ("Id", "Quote", "Name", "DoB", "Place", "Description"))
+        csv_writer.writerows(all_info)
 
 
 if __name__ == '__main__':
