@@ -3,24 +3,22 @@
 import sqlite3
 import json
 import random
+from datetime import datetime
 import requests
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from datetime import datetime
 from colorama import init, Fore, Back, Style
 
 init(autoreset=True)  # Автоматичне додавання Style.RESET_ALL в кінець print
 
 
-# conn = sqlite3.connect('atm.db')
-
-
 class AtmException(Exception):
-    pass
+    """Exception"""
 
 
 class Atm:
+    """ATM working"""
     conn = sqlite3.connect('atm.db')
     with conn:
         cursor = conn.cursor()
@@ -50,9 +48,8 @@ class Atm:
         }
         data = json.dumps(data)
         with self.conn:
-            # cursor = conn.cursor()
             self.cursor.execute(
-                f"""INSERT INTO statement (username, orders)
+                """INSERT INTO statement (username, orders)
                     VALUES (?,?)""", (self.login, data))
         self.conn.commit()
 
@@ -72,7 +69,7 @@ class Atm:
     def get_currency():
         """Прінтує курс валют API"""
         url = "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json"
-        response = requests.get(url).json()[25:35]
+        response = requests.get(url, timeout=1).json()[25:35]
         return [print({i["txt"]: i["rate"]}) for i in response]
 
     def change_user_balance(self, new_balance):
@@ -123,7 +120,7 @@ class Atm:
         add_money = self.dict_nominal()
         choice = {str(num + 1): bill for num, bill in enumerate(add_money.keys())}
         [print(f'press [{num}] --> 💵{bill}') for num, bill in choice.items()]
-        change = input(f"What bill are we changing?: ").strip()
+        change = input("What bill are we changing?: ").strip()
         choose = choice.get(change)
 
         if choose in add_money.keys():
@@ -403,6 +400,7 @@ class Menu:
 
     # Меню інкасатора
     def collector_menu(self):
+        """Menu for collector"""
         choice = input("Select:\n"
                        "1 - Balance\n"
                        "2 - Change Banknotes\n"
@@ -438,6 +436,7 @@ class Menu:
 
 
 def main():
+    """Main function"""
     # Головне МЕНЮ
     choice = input("MENU:\n"
                    "1 - Sign In\n"
