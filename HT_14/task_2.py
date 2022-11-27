@@ -7,12 +7,16 @@
 (або за кожен день у вказаному інтервалі)
 - не забудьте перевірку на валідність введених даних
 """
-
-import requests
 from datetime import datetime, timedelta
+import requests
+
+
+class WrongDateException(Exception):
+    """Exception"""
 
 
 class CurrencyView:
+    """View for Currency"""
     __url = "https://bank.gov.ua/NBU_Exchange/exchange?json&date="
     __codes = ['USD', 'UZS', 'GEL', 'AUD', 'AZN', 'BYN', 'CAD', 'CHF', 'CNY',
                'CZK', 'DKK', 'EUR', 'GBP', 'HUF', 'ILS', 'JPY', 'KZT', 'MDL',
@@ -28,32 +32,35 @@ class CurrencyView:
 
     @property
     def currency(self):
+        """Повертає властивість currency"""
         return self._currency
 
     @currency.setter
     def currency(self, value):
         if value not in self.__codes:
-            raise Exception("Currency not supported")
+            raise WrongDateException("Currency not supported")
         self._currency = value
 
     @property
     def start(self):
+        """Повертає властивість start date"""
         return self._start
 
     @start.setter
     def start(self, value: datetime):
         if not datetime(1996, 2, 1) <= value <= datetime.now():
-            raise Exception("Wrong period or date")
+            raise WrongDateException("Wrong period or date")
         self._start = value
 
     @property
     def end(self):
+        """Повертає властивість end date"""
         return self._end
 
     @end.setter
     def end(self, value: datetime):
         if not self._start <= value <= datetime.now():
-            raise Exception("Wrong period or date")
+            raise WrongDateException("Wrong period or date")
         self._end = value
 
     @property
@@ -64,7 +71,8 @@ class CurrencyView:
                      for x in range((self.end - self._start).days + 1)]
         result = []
         for day in date_list:
-            response = requests.get(self.__url + day.strftime("%d%m%Y"))
+            response = requests.get(
+                self.__url + day.strftime("%d%m%Y"), timeout=1)
             data = response.json()
             result.append({day.date().strftime("%d.%m.%Y"): {
                 "currency": i["CurrencyCodeL"],
@@ -81,7 +89,7 @@ if __name__ == '__main__':
                        "Examples: 01.12.2014\n or\n"
                        "Data of range: 01.12.2014-05.12.2014:\n").split("-")
         start = datetime.strptime(period[0].strip(), "%d.%m.%Y")
-        end = datetime.strptime(period[1].strip(), "%d.%m.%Y")\
+        end = datetime.strptime(period[1].strip(), "%d.%m.%Y") \
             if len(period) > 1 else start
         curr = input("Enter the currency: ").upper().strip()
         view = CurrencyView(curr, start, end).get_period_currency
