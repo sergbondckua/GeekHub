@@ -67,7 +67,7 @@ class CurrencyView:
             response = requests.get(self.__url + day.strftime("%d%m%Y"))
             data = response.json()
             result.append({day.date().strftime("%d.%m.%Y"): {
-                "currency": self._currency,
+                "currency": i["CurrencyCodeL"],
                 "rate": i["Amount"],
                 "units": i["Units"]}
                 for i in data if i["CurrencyCodeL"] == self._currency})

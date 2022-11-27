@@ -31,8 +31,7 @@ def get_author_about(url: str) -> list:
         quotes = soup.find_all("div", class_="quote")
         for quote in quotes:
             num += 1
-            # logging.info(f"{num} Loading")
-            print("\r", f"Load {num}%", num * "#".rjust(1), end="")
+            print("\r", f"Load {num}%", num * "#".rjust(1), end="")  # Loging
             text = quote.find_next("span", class_="text").text.strip('“”')
             author = quote.find_next("small", class_="author").text.strip()
             about_link = url + quote.find_next("a").get("href")
