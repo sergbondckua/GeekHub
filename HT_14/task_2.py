@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 import requests
 
 
-class WrongDateException(Exception):
+class WrongDataException(Exception):
     """Exception"""
 
 
@@ -38,7 +38,7 @@ class CurrencyView:
     @currency.setter
     def currency(self, value):
         if value not in self.__codes:
-            raise WrongDateException("Currency not supported")
+            raise WrongDataException("Currency not supported")
         self._currency = value
 
     @property
@@ -49,7 +49,7 @@ class CurrencyView:
     @start.setter
     def start(self, value: datetime):
         if not datetime(1996, 2, 1) <= value <= datetime.now():
-            raise WrongDateException("Wrong period or date")
+            raise WrongDataException("Wrong period or date")
         self._start = value
 
     @property
@@ -60,7 +60,7 @@ class CurrencyView:
     @end.setter
     def end(self, value: datetime):
         if not self._start <= value <= datetime.now():
-            raise WrongDateException("Wrong period or date")
+            raise WrongDataException("Wrong period or date")
         self._end = value
 
     @property
