@@ -22,7 +22,7 @@ class Parser:
                   "*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
         "User-Agent": ua.random}
 
-    def get_all_info(self):
+    def get_all_info(self) -> list:
         """Returns all information of the product"""
         all_info = []
         link = self.URL
@@ -41,12 +41,12 @@ class Parser:
 
         return all_info
 
-    def get_one_page_quotes(self, soup_quotes):
+    def get_one_page_quotes(self, soup_quotes: BeautifulSoup) -> list:
         """Returns all the quotes in a given"""
         quotes = soup_quotes.find_all("div", class_="quote")
         return [self.get_one_quote(quote) for quote in quotes]
 
-    def get_one_quote(self, soup_quote):
+    def get_one_quote(self, soup_quote: BeautifulSoup) -> list:
         """Returns one quote"""
         text = soup_quote.find_next("span", class_="text").text.strip('“”')
         author = soup_quote.find_next("small", class_="author").text.strip()
@@ -63,7 +63,7 @@ class Parser:
         return [text, author, born_date, born_place, descript]
 
     @staticmethod
-    def write_products_to_csv(result_data):
+    def write_products_to_csv(result_data: list) -> None:
         """Write the information about"""
         with open("scraper.csv", "w", encoding="UTF-8") as file:
             csv_writer = csv.writer(file)
