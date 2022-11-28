@@ -24,20 +24,15 @@ class Parser:
 
     def get_all_info(self) -> list:
         """Returns all information of the product"""
-        all_info = []
-        link = self.URL
-        num = 0
-        while True:
-            num += 1
-            print("\r", f"Load {num} pages", num * "#".rjust(1), end="")  # Loging
-            page = requests.get(link, headers=self.headers, timeout=10)
+        page = requests.get(self.URL, headers=self.headers, timeout=1)
+        start_page_soup = BeautifulSoup(page.content, 'lxml')
+        print("Start parser:")
+        all_info = self.get_one_page_quotes(start_page_soup)
+        for num_pages in range(2, 11):
+            print("\r", f"Load {num_pages} pages", num_pages * "#".rjust(1), end="")  # Loging
+            page = requests.get(self.URL + f"/page/{num_pages}", headers=self.headers, timeout=10)
             soup = BeautifulSoup(page.content, "lxml")
             all_info.extend(self.get_one_page_quotes(soup))
-            if soup.find("li", class_="next"):
-                next_page_link = soup.find("li", class_="next").find("a").get("href")
-                link = self.URL + next_page_link
-            else:
-                break
 
         return all_info
 
@@ -68,7 +63,7 @@ class Parser:
         with open("scraper.csv", "w", encoding="UTF-8") as file:
             csv_writer = csv.writer(file)
             csv_writer.writerow(
-                ("Id", "Quote", "Name", "DoB", "Place", "Description"))
+                ("Quote", "Name", "DoB", "Place", "Description"))
             csv_writer.writerows(result_data)
 
 
