@@ -29,8 +29,10 @@ class Parser:
         print("Start parser:")
         all_info = self.get_one_page_quotes(start_page_soup)
         for num_pages in range(2, 11):
-            print("\r", f"Load {num_pages} pages", num_pages * "#".rjust(1), end="")  # Loging
-            page = requests.get(self.URL + f"/page/{num_pages}", headers=self.headers, timeout=10)
+            print("\r", f"Load {num_pages} pages", num_pages * "#".rjust(1),
+                  end="")  # Loging
+            page = requests.get(self.URL + f"/page/{num_pages}",
+                                headers=self.headers, timeout=1)
             soup = BeautifulSoup(page.content, "lxml")
             all_info.extend(self.get_one_page_quotes(soup))
 
@@ -46,7 +48,7 @@ class Parser:
         text = soup_quote.find_next("span", class_="text").text.strip('“”')
         author = soup_quote.find_next("small", class_="author").text.strip()
         about_link = self.URL + soup_quote.find_next("a").get("href")
-        author_page = requests.get(about_link, headers=self.headers, timeout=10)
+        author_page = requests.get(about_link, headers=self.headers, timeout=1)
         author_soup = BeautifulSoup(author_page.content, "lxml")
         born_date = author_soup.find(
             "span", class_="author-born-date").text.strip()
