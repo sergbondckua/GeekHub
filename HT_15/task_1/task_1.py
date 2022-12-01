@@ -91,6 +91,11 @@ class ParserDomains:
                 j for i in self.get_all_statements() for j in i)
 
 
+def main():
+    """Main function"""
+    go_parser = ParserDomains()
+    go_parser.write_products_to_csv()
+
+
 if __name__ == '__main__':
-    go = ParserDomains()
-    go.write_products_to_csv()
+    main()
