@@ -80,7 +80,7 @@ class ParserDomains:
                 de_zone, reg, rdt, traffic, valuation, price, bids, end_time]
 
     def write_products_to_csv(self) -> None:
-        """Write the information about"""
+        """Write statements to CSV file"""
         with open("domains.csv", "w", encoding="UTF-8") as file:
             csv_writer = csv.writer(file)
             csv_writer.writerow(
@@ -92,5 +92,5 @@ class ParserDomains:
 
 
 if __name__ == '__main__':
-    s = ParserDomains()
-    s.write_products_to_csv()
+    go = ParserDomains()
+    go.write_products_to_csv()
