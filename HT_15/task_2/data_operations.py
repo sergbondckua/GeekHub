@@ -58,7 +58,14 @@ class DataBaseOperations:  # pylint: disable=too-few-public-methods
                     href,
                     brand,
                     category)
-                    VALUES (?,?,?,?,?,?,?)""", products)
+                    VALUES (?,?,?,?,?,?,?)
+                    ON CONFLICT(product_id) DO UPDATE SET
+                    product_id = product_id,
+                    title = title,
+                    old_price = old_price,
+                    price = price,
+                    href = href,
+                    brand = brand""", products)
                 self._connect_sql.commit()
                 self.logger.info("All products have been saved successfully")
         except sqlite3.Error as error:

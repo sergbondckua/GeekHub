@@ -9,6 +9,7 @@ import csv
 import logging
 from time import sleep
 from random import randint
+
 import requests
 from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
@@ -46,7 +47,9 @@ class ParserDomains:
             soup = BeautifulSoup(response.content, "lxml")
             all_statements.append(self._get_single_page_statements(soup))
             sleep(randint(4, 6))
-            cnt_items += 25
+            cnt_items += len(
+                soup.find("table", class_="base1").find("tbody").find_all("tr")
+            )
             self.logger.info("%s items processed", cnt_items)
         return all_statements
 

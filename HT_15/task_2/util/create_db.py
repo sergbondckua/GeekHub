@@ -12,8 +12,8 @@ def create_db():
 
             cursor.execute(
                 """CREATE TABLE IF NOT EXISTS products(
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    product_id INT,
+                    /*id INTEGER PRIMARY KEY AUTOINCREMENT,*/
+                    product_id INT PRIMARY KEY,
                     title TEXT,
                     old_price INT,
                     price INT,

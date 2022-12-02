@@ -7,6 +7,7 @@ current_price,href (url на цей товар на сайті), brand, category
 """
 import logging
 import time
+
 import requests
 from fake_useragent import UserAgent
 
@@ -26,7 +27,7 @@ class RozetkaAPI:  # pylint: disable=too-few-public-methods
         }
 
     def get_item_data(self, id_product: str) -> tuple | bool:
-        """Returns a dictionary with product data
+        """Returns a tuple with product data
         :param id_product: product id
         :return: product data
         """
