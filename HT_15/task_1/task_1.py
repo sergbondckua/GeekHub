@@ -42,14 +42,14 @@ class ParserDomains:
         while True:
             if cnt_items >= 300:
                 break
+
             self.session.headers.update(self.headers)
             response = self.session.get(self._URL + str(cnt_items), timeout=2)
             soup = BeautifulSoup(response.content, "lxml")
-            all_statements.append(self._get_single_page_statements(soup))
+            single_page_statements = self._get_single_page_statements(soup)
+            all_statements.append(single_page_statements)
             sleep(randint(4, 6))
-            cnt_items += len(
-                soup.find("table", class_="base1").find("tbody").find_all("tr")
-            )
+            cnt_items += len(single_page_statements)
             self.logger.info("%s items processed", cnt_items)
         return all_statements
 
