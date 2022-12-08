@@ -6,7 +6,7 @@ class BasesGelSpider(Spider):
     """Base gel parser"""
     name = "bases"
     allowed_domains = ["gamagel.com.ua"]
-    start_urls = ["https://gamagel.com.ua/bazi/"]
+    start_urls = ["https://gamagel.com.ua/palitra/"]
 
     def parse(self, response, **kwargs):
         """
@@ -39,7 +39,8 @@ class BasesGelSpider(Spider):
         yield {
             "name": response.css("h1.product-title::text").get().strip(),
             "url": response.url,
-            "description": response.css("div.text p::text").get().strip(),
+            "description": response.css(
+                "div.text p::text").get().strip().capitalize(),
             "img_url": self.allowed_domains[0] +
                        response.css(
                            "img.gallery__photo-img::attr(src)").get().strip(),
