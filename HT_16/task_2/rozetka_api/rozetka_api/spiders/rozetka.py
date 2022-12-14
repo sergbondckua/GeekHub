@@ -40,7 +40,7 @@ class RozetkaSpider(scrapy.Spider):
         number_of_pages = self.get_number_of_pages(response)
         for page_number in range(2, number_of_pages + 1):
             yield response.follow(f"{self.start_urls[0]}page={page_number}/",
-                                  callback=self.get_product, dont_filter=True)
+                                  callback=self.parse)
 
     @staticmethod
     def get_number_of_pages(response: HtmlResponse) -> int:
