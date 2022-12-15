@@ -5,11 +5,6 @@
 (бренд, категорія, модель, ціна, рейтинг тощо) і зберігати їх у CSV файл
 (наприклад, якщо передана категорія mobile-phones/c80003/,
 то файл буде називатися c80003_products.csv)
-П.С. Запуск кожного процесу відбувається шляхом запуску відповідного
-файлу task.py (як до цього запускалися попередні домашки), а не через консоль
-(гугл підкаже how to start scrapy programmatically :подмигивание:)
-П.С.С У завданні 2 назву категорії просто збережіть у змінну
-(не треба робити через input())
 """
 
 from scrapy.crawler import CrawlerProcess
@@ -18,7 +13,7 @@ from rozetka_api.rozetka_api.spiders.rozetka import RozetkaSpider
 
 def main():
     """Main function"""
-    category = "sadovye-ograjdeniya/c2551592"
+    category = "aksessuari-dlya-ochkov-virtualnoy-realnosti/c4659246"
     id_category = category.split("/", maxsplit=1)[-1]
 
     process = CrawlerProcess(settings={

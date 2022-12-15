@@ -1,7 +1,4 @@
 """Start parser RozetkaSpider with a category"""
-import json
-
-# Scrapy
 import scrapy
 from scrapy.http import HtmlResponse
 
@@ -61,7 +58,7 @@ class RozetkaSpider(scrapy.Spider):
             :response: response HtmlResponse
             :yield: item information
         """
-        api = json.loads(response.text)
+        api = response.json()
         item = {"id": api["data"]["id"],
                 "title": api["data"]["title"],
                 "old_price": api["data"]["old_price"],
