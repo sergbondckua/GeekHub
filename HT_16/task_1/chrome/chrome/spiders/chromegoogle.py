@@ -19,6 +19,7 @@ class ChromegoogleSpider(scrapy.Spider):
             if link:
                 yield response.follow(
                     link, callback=self.parse_sub_links, dont_filter=True)
+
     def parse_sub_links(self, response: HtmlResponse):
         """
         Parse all sub_links in response
