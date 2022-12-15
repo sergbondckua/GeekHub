@@ -9,8 +9,8 @@ class RozetkaSpider(scrapy.Spider):
     Args:
         :category: The category to scrape
     """
-    name = 'rozetka'
-    allowed_domains = ['rozetka.com.ua']
+    name = "rozetka"
+    allowed_domains = ["rozetka.com.ua"]
     PAGE_URL = "https://rozetka.com.ua/api/product-api/v4/goods/" \
                "get-main?front-type=xl&country=UA&lang=ua&goodsId="
 
@@ -25,7 +25,7 @@ class RozetkaSpider(scrapy.Spider):
             :response: response HtmlResponse
         """
         for product_id in response.css(
-                'ul.catalog-grid li.catalog-grid__cell div.g-id::text').getall():
+                "ul.catalog-grid li.catalog-grid__cell div.g-id::text").getall():
             yield response.follow(self.PAGE_URL + product_id,
                                   callback=self.get_product,
                                   dont_filter=True)
