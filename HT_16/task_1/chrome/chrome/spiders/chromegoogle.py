@@ -36,7 +36,7 @@ class ChromegoogleSpider(scrapy.Spider):
         for sub_link in response.xpath(
                 "//*[local-name()='loc']/text()").getall():
             yield response.follow(
-                sub_link, callback=self.parse_extension, dont_filter=True)
+                sub_link, callback=self.parse_extension)
 
     @staticmethod
     def parse_extension(response:HtmlResponse):

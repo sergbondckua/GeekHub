@@ -1,11 +1,4 @@
-"""
-Викорисовуючи Scrapy, написати скрипт, який буде приймати на вхід назву та
-ID категорії (у форматі назва/id/) із сайту https://rozetka.com.ua і буде
-збирати всі товари із цієї категорії, збирати всі можливі дані
-(бренд, категорія, модель, ціна, рейтинг тощо) і зберігати їх у CSV файл
-(наприклад, якщо передана категорія mobile-phones/c80003/, то файл буде
-називатися c80003_products.csv)
-"""
+"""Start parser RozetkaSpider with a category"""
 import json
 
 # Scrapy
@@ -16,19 +9,23 @@ from scrapy.http import HtmlResponse
 class RozetkaSpider(scrapy.Spider):
     """
     Scrape products from Rozetka
+    Args:
+        :category: The category to scrape
     """
     name = 'rozetka'
     allowed_domains = ['rozetka.com.ua']
     PAGE_URL = "https://rozetka.com.ua/api/product-api/v4/goods/" \
                "get-main?front-type=xl&country=UA&lang=ua&goodsId="
 
-    def __init__(self, category=None, *args, **kwargs):
+    def __init__(self, category, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.start_urls = [f"https://rozetka.com.ua/ua/{category}/"]
 
-    def parse(self, response, **kwargs):
+    def parse(self, response: HtmlResponse, **kwargs):
         """
         Parser all products from one page
+        Args:
+            :response: response HtmlResponse
         """
         for product_id in response.css(
                 'ul.catalog-grid li.catalog-grid__cell div.g-id::text').getall():
@@ -48,7 +45,7 @@ class RozetkaSpider(scrapy.Spider):
         Get the number of pages
         Args:
             :response: response HtmlResponse
-            :return: number page
+            :return: number last page
         """
         pagination = response.css(
             "a.pagination__direction--forward::attr(href)").get()
@@ -60,6 +57,9 @@ class RozetkaSpider(scrapy.Spider):
     def get_product(response: HtmlResponse):
         """
         Scrape product information
+        Args:
+            :response: response HtmlResponse
+            :yield: item information
         """
         api = json.loads(response.text)
         item = {"id": api["data"]["id"],
