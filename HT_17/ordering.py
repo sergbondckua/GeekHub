@@ -34,6 +34,13 @@ class OrderProcessPlacer:
     """Organization of automatic order
     Methods:
         :main_browser_process: General process
+        :start_up: Start up browser
+        :status_element: Wait condition element
+        :goto_order_bot: Go to page Order
+        :check_alert: Check glitch
+        :input_order_fields: Checkout process
+        :make_screenshot: Make screenshot
+        :_clear_folder: Clear all files in folder
     """
     _BASE_DIR = Path(__file__).resolve().parent
     _URL = "https://robotsparebinindustries.com"
@@ -41,7 +48,7 @@ class OrderProcessPlacer:
     orders = Stream().get_data_csv
     option_arguments = [
         "start-maximized",  # Opens Chrome in maximize mode
-        #"--headless",  # Opens Chrome in background
+        "--headless",  # Opens Chrome in background
         "--no-sandbox",  # Disable sandbox
         "--disable-blink-features=AutomationControlled",  # To not detected
         "disable-popup-blocking",  # Disables pop-ups displayed on Chrome
@@ -59,7 +66,7 @@ class OrderProcessPlacer:
 
     def main_process_order(self):
         """Starting a process ordering"""
-        self.clear_folder()
+        self._clear_folder()
         self.goto_order_bot()
         self.input_order_fields()
 
@@ -150,7 +157,7 @@ class OrderProcessPlacer:
             path.join(self._BASE_DIR, f"output/{receipt_id.text}_robot.png"))
         self.logging.info("Robot %s, photographed", receipt_id.text)
 
-    def clear_folder(self):
+    def _clear_folder(self):
         """Deleted all files in the folder"""
         for file in glob.glob(path.join(self._BASE_DIR, "output/*")):
             os.remove(file)
