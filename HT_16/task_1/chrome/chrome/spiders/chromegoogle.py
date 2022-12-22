@@ -18,7 +18,7 @@ class ChromegoogleSpider(scrapy.Spider):
         for link in response.xpath("//*[local-name()='loc']/text()").getall():
             if link:
                 yield response.follow(
-                    link, callback=self.parse_sub_links, dont_filter=True)
+                    link, callback=self.parse_sub_links)
 
     def parse_sub_links(self, response: HtmlResponse):
         """
@@ -28,7 +28,7 @@ class ChromegoogleSpider(scrapy.Spider):
         for sub_link in response.xpath(
                 "//*[local-name()='loc']/text()").getall():
             yield response.follow(
-                sub_link, callback=self.parse_extension)
+                sub_link, callback=self.parse_extension, dont_filter=True)
 
     @staticmethod
     def parse_extension(response:HtmlResponse):

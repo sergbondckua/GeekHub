@@ -11,5 +11,9 @@ class Stream:
 
         with requests.get(self.csv_url, stream=True, timeout=1) as response:
             lines = (line.decode('utf-8') for line in response.iter_lines())
-            data_csv = list(csv.reader(lines))[1:]
-        return data_csv
+            csv_data = list(csv.reader(lines))[1:]
+        return csv_data
+
+
+for key in Stream().get_data_csv:
+    print(key)

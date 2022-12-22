@@ -9,3 +9,4 @@ fake-useragent==1.1.1
 Scrapy~=2.7.1
 itemadapter~=0.7.0
 selenium~=4.7.2
+webdriver-manager~=3.8.5

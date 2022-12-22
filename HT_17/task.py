@@ -3,6 +3,7 @@
 """
 import logging
 import time
+from os import path
 from pathlib import Path
 
 # Selenium modules
@@ -13,6 +14,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import Select
 
 # Chrome driver manager
 from webdriver_manager.chrome import ChromeDriverManager
@@ -37,6 +39,7 @@ class OrderProcessPlacer:
     _BASE_DIR = Path(__file__).resolve().parent
     _URL = "https://robotsparebinindustries.com"
     __chromedriver = ChromeDriverManager().install()
+    orders = Stream().get_data_csv
     option_arguments = [
         "start-maximized",  # Opens Chrome in maximize mode
         #"--headless",  # Opens Chrome in background
@@ -58,7 +61,8 @@ class OrderProcessPlacer:
     def main_process_order(self):
         """Starting a process ordering"""
         self.goto_order_bot()
-        time.sleep(3)
+        self.input_order_fields()
+        time.sleep(5)
 
     def start_up(self):
         """Start the Chrome browser"""
@@ -66,13 +70,15 @@ class OrderProcessPlacer:
             "Opening browser and visiting to URL: %s", self._URL)
         self.browser.get(self._URL)
 
-    def status_element(self, by_element, timeout=5):
+    def status_element(self, by_element, timeout=20):
         """Wait for the element"""
         wait = WebDriverWait(self.browser, timeout)
         try:
-            wait.until(EC.visibility_of_element_located(by_element))
+            wait.until(EC.visibility_of_all_elements_located(by_element))
         except TimeoutException as ex:
             raise TimeoutException('Not found element') from ex
+
+
     def goto_order_bot(self):
         """..."""
         self.logging.info("Go to order page")
@@ -80,6 +86,64 @@ class OrderProcessPlacer:
         self.browser.find_element(By.LINK_TEXT, "Order your robot!").click()
         self.status_element((By.CLASS_NAME, "modal-content"))
         self.browser.find_element(By.CLASS_NAME, "btn-dark").click()
+
+    def check_alert(self):
+        """Check if the alert"""
+        wait = WebDriverWait(self.browser, 3)
+        try:
+            wait.until(EC.visibility_of_element_located(
+                (By.CLASS_NAME, "alert-danger")))
+        except (TimeoutException, NoSuchElementException):
+            return False
+        alert = self.browser.find_element(By.CLASS_NAME, "alert").text
+        self.logging.warning("A glitch has been detected: '%s'", alert)
+        return True
+
+    def input_order_fields(self):
+        """Enter fields form"""
+        for num, _ in enumerate(self.orders):
+            self.status_element((By.TAG_NAME, "form"))
+            order = self.browser.find_element(By.ID, "order")
+            # Select head
+            head = Select(self.browser.find_element(By.ID, "head"))
+            head.select_by_index(self.orders[num][1])
+            # Check radio body
+            body = self.browser.find_element(
+                By.ID, f"id-body-{self.orders[num][1]}")
+            body.click()
+            # Input legs
+            legs = self.browser.find_element(
+                By.XPATH,
+                '//*[@placeholder="Enter the part number for the legs"]')
+            legs.clear()
+            legs.send_keys(self.orders[num][3])
+            # Input address
+            address = self.browser.find_element(By.ID, "address")
+            address.clear()
+            address.send_keys(self.orders[num][4])
+            # Press button Preview
+            preview = self.browser.find_element(By.ID, "preview")
+            preview.click()
+            self.status_element(
+                (By.XPATH, '//*[@id="robot-preview-image"]/img[3]'))
+            # press button Order
+            order.click()
+            # Click until the glitch disappears
+            while self.check_alert():
+                order.click()
+            self.status_element((By.ID, "receipt"))
+            receipt_id = self.browser.find_element(
+                By.ID, "receipt").find_element(By.TAG_NAME, "p")
+            self.status_element(
+                (By.XPATH, '//*[@id="robot-preview-image"]/img[3]'))
+            # Make screenshot
+            self.browser.find_element(
+                By.ID, "robot-preview-image").screenshot(
+                f"output/{receipt_id.text}_robot.png")
+            self.status_element((By.ID, "order-another"))
+            self.browser.find_element(By.ID, "order-another").click()
+            self.status_element((By.CLASS_NAME, "modal-content"))
+            self.browser.find_element(By.CLASS_NAME, "btn-dark").click()
 
     def __enter__(self):
         self.start_up()  # open browser
