@@ -10,7 +10,7 @@ logging.basicConfig(
     level=logging.INFO)
 
 
-class Stream:
+class Stream:  # pylint: disable=too-few-public-methods
     """Getting data from a stream file CSV"""
     csv_url = "https://robotsparebinindustries.com/orders.csv"
 

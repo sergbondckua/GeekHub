@@ -48,7 +48,7 @@ class OrderProcessPlacer:
     orders = Stream().get_data_csv
     option_arguments = [
         "start-maximized",  # Opens Chrome in maximize mode
-        "--headless",  # Opens Chrome in background
+        #"--headless",  # Opens Chrome in background
         "--no-sandbox",  # Disable sandbox
         "--disable-blink-features=AutomationControlled",  # To not detected
         "disable-popup-blocking",  # Disables pop-ups displayed on Chrome
@@ -95,7 +95,7 @@ class OrderProcessPlacer:
 
     def check_alert(self):
         """Check if the alert"""
-        wait = WebDriverWait(self.browser, 3)
+        wait = WebDriverWait(self.browser, 2)
         try:
             wait.until(EC.visibility_of_element_located(
                 (By.CLASS_NAME, "alert-danger")))
@@ -139,7 +139,7 @@ class OrderProcessPlacer:
                 order.click()
             self.status_element((By.ID, "receipt"))
             receipt_id = self.browser.find_element(
-                By.ID, "receipt").find_element(By.TAG_NAME, "p")
+                By.ID, "receipt").find_element(By.TAG_NAME, "p").text
             self.status_element(
                 (By.XPATH, '//*[@id="robot-preview-image"]/img[3]'))
             # Make screenshot
@@ -148,14 +148,14 @@ class OrderProcessPlacer:
             self.browser.find_element(By.ID, "order-another").click()
             self.status_element((By.CLASS_NAME, "modal-content"))
             self.browser.find_element(By.CLASS_NAME, "btn-dark").click()
-            self.logging.info("[%s]. Robot has been completed", num)
+            self.logging.info("[%s] >> Robot has been completed", num)
 
     def make_screenshot(self, receipt_id):
         """Make screenshot"""
         self.browser.find_element(
             By.ID, "robot-preview-image").screenshot(
-            path.join(self._BASE_DIR, f"output/{receipt_id.text}_robot.png"))
-        self.logging.info("Robot %s, photographed", receipt_id.text)
+            path.join(self._BASE_DIR, f"output/{receipt_id}_robot.png"))
+        self.logging.info("Robot %s, photographed", receipt_id)
 
     def _clear_folder(self):
         """Deleted all files in the folder"""
