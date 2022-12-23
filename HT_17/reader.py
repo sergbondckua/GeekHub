@@ -21,10 +21,9 @@ class Stream:
     def get_data_csv(self):
         """Returns a CSV data in list format"""
         with requests.get(self.csv_url, stream=True, timeout=5) as response:
-            lines = (line.decode('utf-8') for line in response.iter_lines())
+            lines = [line.decode('utf-8') for line in response.iter_lines()]
             csv_data = list(csv.reader(lines))[1:]
         self.logging.info("Order file received. [<class 'list'>]")
-
         return csv_data
 
     @property
@@ -33,8 +32,9 @@ class Stream:
         with requests.get(self.csv_url, stream=True, timeout=5) as response:
             lines = (line.decode('utf-8') for line in response.iter_lines())
             csv_reader_dict = list(csv.DictReader(lines))
-            csv_dict = [{k.replace(" ", "_").lower(): v}
-                        for i in csv_reader_dict for k, v in i.items()]
+            csv_dict = []
+            for item in csv_reader_dict:
+                csv_dict.append({key.replace(" ", "_").lower(): value
+                                 for key, value in item.items()})
         self.logging.info("Order file received. [<class 'dict'>]")
-
         return csv_dict

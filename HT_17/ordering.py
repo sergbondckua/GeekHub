@@ -1,19 +1,20 @@
 """Automatically order the Robot"""
+
+import os
 import glob
 import logging
-import os
 from os import path
 from pathlib import Path
 
 # Selenium modules
-from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import Select
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import Select
+from selenium.common.exceptions import TimeoutException, NoSuchElementException
 
 # Chrome driver manager
 from webdriver_manager.chrome import ChromeDriverManager
@@ -25,6 +26,7 @@ from reader import Stream  # get stream file csv
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     level=logging.INFO)
+
 
 class NotClosedException(Exception):
     """Unsuccessful attempt to close the browser"""
@@ -45,10 +47,10 @@ class OrderProcessPlacer:
     _BASE_DIR = Path(__file__).resolve().parent
     _URL = "https://robotsparebinindustries.com"
     __chromedriver = ChromeDriverManager().install()
-    orders = Stream().get_data_csv
+    orders = Stream().get_dict_csv
     option_arguments = [
         "start-maximized",  # Opens Chrome in maximize mode
-        #"--headless",  # Opens Chrome in background
+        # "--headless",  # Opens Chrome in background
         "--no-sandbox",  # Disable sandbox
         "--disable-blink-features=AutomationControlled",  # To not detected
         "disable-popup-blocking",  # Disables pop-ups displayed on Chrome
@@ -80,18 +82,17 @@ class OrderProcessPlacer:
         """Wait for the element"""
         wait = WebDriverWait(self.browser, timeout)
         try:
-            wait.until(EC.visibility_of_all_elements_located(by_element))
+            wait.until(EC.visibility_of_element_located(by_element))
         except TimeoutException as ex:
             raise TimeoutException('Not found element') from ex
 
-
     def goto_order_bot(self):
         """Page order bot"""
-        self.logging.info("Go to order page")
         self.status_element((By.LINK_TEXT, "Order your robot!"))
         self.browser.find_element(By.LINK_TEXT, "Order your robot!").click()
         self.status_element((By.CLASS_NAME, "modal-content"))
         self.browser.find_element(By.CLASS_NAME, "btn-dark").click()
+        self.logging.info("Go to order page URL: %s", self.browser.current_url)
 
     def check_alert(self):
         """Check if the alert"""
@@ -102,60 +103,60 @@ class OrderProcessPlacer:
         except (TimeoutException, NoSuchElementException):
             return False
         alert = self.browser.find_element(By.CLASS_NAME, "alert").text
-        self.logging.warning("A glitch has been detected: <%s>", alert)
+        self.logging.warning("A glitch has been detected: 🤬 <%s>", alert)
         return True
 
     def input_order_fields(self):
         """Enter fields form"""
-        for num, _ in enumerate(self.orders):
+        for data in self.orders:
             self.status_element((By.TAG_NAME, "form"))
             order = self.browser.find_element(By.ID, "order")
             # Select head
             head = Select(self.browser.find_element(By.ID, "head"))
-            head.select_by_index(self.orders[num][1])
+            head.select_by_index(data["head"])
             # Check radio body
             body = self.browser.find_element(
-                By.ID, f"id-body-{self.orders[num][1]}")
+                By.ID, f"id-body-{data['body']}")
             body.click()
             # Input legs
             legs = self.browser.find_element(
                 By.XPATH,
                 '//*[@placeholder="Enter the part number for the legs"]')
             legs.clear()
-            legs.send_keys(self.orders[num][3])
+            legs.send_keys(data["legs"])
             # Input address
             address = self.browser.find_element(By.ID, "address")
             address.clear()
-            address.send_keys(self.orders[num][4])
+            address.send_keys(data["address"])
             # Press button Preview
             preview = self.browser.find_element(By.ID, "preview")
             preview.click()
             self.status_element(
                 (By.XPATH, '//*[@id="robot-preview-image"]/img[3]'))
-            # press button Order
-            order.click()
+            order.click()  # press button Order
             # Click until the glitch disappears
             while self.check_alert():
                 order.click()
             self.status_element((By.ID, "receipt"))
             receipt_id = self.browser.find_element(
                 By.ID, "receipt").find_element(By.TAG_NAME, "p").text
-            self.status_element(
-                (By.XPATH, '//*[@id="robot-preview-image"]/img[3]'))
-            # Make screenshot
-            self.make_screenshot(receipt_id)
+            self.make_screenshot(receipt_id)  # Make screenshot
             self.status_element((By.ID, "order-another"))
             self.browser.find_element(By.ID, "order-another").click()
             self.status_element((By.CLASS_NAME, "modal-content"))
             self.browser.find_element(By.CLASS_NAME, "btn-dark").click()
-            self.logging.info("[%s] >> Robot has been completed", num)
+            self.logging.info(
+                "🟢 #%s << %s >> has been completed", data["order_number"],
+                receipt_id)
 
     def make_screenshot(self, receipt_id):
         """Make screenshot"""
+        self.status_element(
+            (By.XPATH, '//*[@id="robot-preview-image"]/img[3]'))
         self.browser.find_element(
             By.ID, "robot-preview-image").screenshot(
             path.join(self._BASE_DIR, f"output/{receipt_id}_robot.png"))
-        self.logging.info("Robot %s, photographed", receipt_id)
+        self.logging.debug("Robot %s, photographed", receipt_id)
 
     def _clear_folder(self):
         """Deleted all files in the folder"""
