@@ -35,13 +35,22 @@ class NotClosedException(Exception):
 class OrderProcessPlacer:
     """Organization of automatic order
     Methods:
-        :main_browser_process: General process
         :start_up: Start up browser
-        :status_element: Wait condition element
-        :goto_order_bot: Go to page Order
+        :main_browser_process: General process
+        :build_robot: Build robot process
+        :wait_element: Wait condition element
         :check_alert: Check glitch
-        :input_order_fields: Checkout process
-        :make_screenshot: Make screenshot
+        :link_order_your_robot: Go to page Build and order your robot!
+        :modal_content_button: Closed modal content
+        :head_select: Select head for Robot
+        :body_input: Select body for Robot
+        :legs_input: Input legs for Robot
+        :shipping_address: Shipping address
+        :button_preview: Press button
+        :button_order: Press button
+        :button_another_order: Press button
+        :get_receipt_id: Get receipt ID
+        :make_screenshot: Make Robot screenshot
         :_clear_folder: Clear all files in folder
     """
     _BASE_DIR = Path(__file__).resolve().parent
