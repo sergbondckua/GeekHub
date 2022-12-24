@@ -2,7 +2,7 @@
 Автоматизувати процес замовлення робота за допомогою Selenium
 """
 
-from ordering import OrderProcessPlacer
+from process import OrderProcessPlacer
 
 
 def main():
