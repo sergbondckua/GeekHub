@@ -116,14 +116,13 @@ class OrderProcessPlacer:
 
     def check_alert(self):
         """Check if the alert"""
-        wait = WebDriverWait(self.browser, 2)
         try:
-            wait.until(EC.visibility_of_element_located(
+            alert = WebDriverWait(
+                self.browser, 2).until(EC.visibility_of_element_located(
                 (By.CLASS_NAME, "alert-danger")))
         except (TimeoutException, NoSuchElementException):
             return False
-        alert = self.browser.find_element(By.CLASS_NAME, "alert").text
-        self.logging.warning("A glitch has been detected: 🤬 <%s>", alert)
+        self.logging.warning("A glitch has been detected: 🤬 <%s>", alert.text)
         return True
 
     def link_order_your_robot(self):
