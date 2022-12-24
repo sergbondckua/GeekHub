@@ -116,9 +116,9 @@ class OrderProcessPlacer:
 
     def check_alert(self):
         """Check if the alert"""
+        wait = WebDriverWait(self.browser, 2)
         try:
-            alert = WebDriverWait(
-                self.browser, 2).until(EC.visibility_of_element_located(
+            alert = wait.until(EC.visibility_of_element_located(
                 (By.CLASS_NAME, "alert-danger")))
         except (TimeoutException, NoSuchElementException):
             return False
