@@ -43,7 +43,7 @@ class OrderProcessPlacer:
         :wait_element: Wait condition element
         :check_alert: Check glitch
         :go_link_order_robot: Go to page Build and order your robot!
-        :click_button_modal_content: Closes the modal window
+        :close_modal_content: Closes the modal window
         :select_head: Select head for Robot
         :input_body: Select body for Robot
         :input_legs: Input legs for Robot
@@ -88,7 +88,7 @@ class OrderProcessPlacer:
         """Starting a process ordering"""
         self._clear_folder()
         self.go_link_order_robot()
-        self.click_button_modal_content()
+        self.close_modal_content()
         for order in self.orders:
             self.build_robot(order)
             self.click_button_preview()
@@ -98,7 +98,7 @@ class OrderProcessPlacer:
             self.logging.info(
                 "🟢 #%s has been completed", order["order_number"])
             self.click_button_order_another()
-            self.click_button_modal_content()
+            self.close_modal_content()
         self.logging.info("🏁 All orders is completed")
 
     def build_robot(self, data: dict):
@@ -134,7 +134,7 @@ class OrderProcessPlacer:
         self.wait_element((By.LINK_TEXT, "Order your robot!")).click()
         self.logging.info("Go to order page URL: %s", self.browser.current_url)
 
-    def click_button_modal_content(self):
+    def close_modal_content(self):
         """Press button OK"""
         self.wait_element((By.CLASS_NAME, "btn-dark")).click()
 
