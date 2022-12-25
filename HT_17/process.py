@@ -41,7 +41,7 @@ class OrderProcessPlacer:
         :wait_element: Wait condition element
         :check_alert: Check glitch
         :link_order_your_robot: Go to page Build and order your robot!
-        :modal_content_button: Closed modal content
+        :modal_content_button: Closes the modal window
         :head_select: Select head for Robot
         :body_input: Select body for Robot
         :legs_input: Input legs for Robot
@@ -97,7 +97,7 @@ class OrderProcessPlacer:
             self.modal_content_button()
         self.logging.info("🏁 All orders is completed")
 
-    def build_robot(self, data):
+    def build_robot(self, data: dict):
         """input values for build robot"""
         self.wait_element((By.TAG_NAME, "form"))
         self.head_select(data)
@@ -105,7 +105,7 @@ class OrderProcessPlacer:
         self.legs_input(data)
         self.shipping_address(data)
 
-    def wait_element(self, by_element, timeout=20):
+    def wait_element(self, by_element: tuple, timeout: int = 20):
         """Wait for the element"""
         wait = WebDriverWait(self.browser, timeout)
         try:
@@ -114,7 +114,7 @@ class OrderProcessPlacer:
         except TimeoutException as ex:
             raise TimeoutException("Not found element") from ex
 
-    def check_alert(self):
+    def check_alert(self) -> bool:
         """Check if the alert"""
         wait = WebDriverWait(self.browser, 2)
         try:
@@ -134,16 +134,16 @@ class OrderProcessPlacer:
         """Press button OK"""
         self.wait_element((By.CLASS_NAME, "btn-dark")).click()
 
-    def head_select(self, data):
+    def head_select(self, data: dict):
         """Select a head for the robot"""
         Select(self.browser.find_element(
             By.ID, "head")).select_by_index(data["head"])
 
-    def body_input(self, data):
+    def body_input(self, data: dict):
         """Select a body for the robot"""
         self.browser.find_element(By.ID, f"id-body-{data['body']}").click()
 
-    def legs_input(self, data):
+    def legs_input(self, data: dict):
         """Enter the part number for the legs"""
         legs = self.browser.find_element(
             By.CSS_SELECTOR,
@@ -151,7 +151,7 @@ class OrderProcessPlacer:
         legs.clear()
         legs.send_keys(data["legs"])
 
-    def shipping_address(self, data):
+    def shipping_address(self, data: dict):
         """Shipping address"""
         address = self.browser.find_element(By.ID, "address")
         address.clear()
@@ -174,7 +174,7 @@ class OrderProcessPlacer:
         order_another.click()
         self.logging.info("➡️ Switching to another order")
 
-    def get_receipt_id(self):
+    def get_receipt_id(self) -> str:
         """Get Receipt ID"""
         self.wait_element((By.ID, "receipt"))
         receipt_id = self.browser.find_element(
