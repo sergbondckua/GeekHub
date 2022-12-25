@@ -13,8 +13,10 @@ from selenium.webdriver.support.ui import Select
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
+
 
 # Chrome driver manager
 from webdriver_manager.chrome import ChromeDriverManager
@@ -50,6 +52,7 @@ class OrderProcessPlacer:
         :button_order: Press button
         :button_another_order: Press button
         :get_receipt_id: Get receipt ID
+        :source_html_element: Get source HTML element
         :make_screenshot: Make Robot screenshot
         :_clear_folder: Clear all files in folder
     """
@@ -105,7 +108,7 @@ class OrderProcessPlacer:
         self.legs_input(data)
         self.shipping_address(data)
 
-    def wait_element(self, by_element: tuple, timeout: int = 20):
+    def wait_element(self, by_element: tuple, timeout: int = 20) -> WebElement:
         """Wait for the element"""
         wait = WebDriverWait(self.browser, timeout)
         try:
@@ -180,6 +183,10 @@ class OrderProcessPlacer:
         receipt_id = self.browser.find_element(
             By.ID, "receipt").find_element(By.TAG_NAME, "p").text
         return receipt_id
+
+    def source_html_element(self, by_element: tuple) -> str:
+        """Get Source HTML Element"""
+        return self.wait_element(by_element).get_attribute("outerHTML")
 
     def make_screenshot(self):
         """Make screenshot"""
