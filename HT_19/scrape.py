@@ -8,6 +8,7 @@ import django
 import requests
 from fake_useragent import UserAgent
 
+# Django integration
 sys.path.append(os.path.dirname(os.path.abspath("scrape")))
 os.environ["DJANGO_SETTINGS_MODULE"] = "app.settings"
 django.setup()
@@ -59,7 +60,7 @@ class RozetkaAPI:  # pylint: disable=too-few-public-methods
 
 
 class DataBaseOperations:  # pylint: disable=too-few-public-methods
-    """Operations with the SQLite database"""
+    """Add data to the database"""
 
     def __init__(self):
         self.logger = logging.getLogger(__name__)
@@ -77,6 +78,7 @@ class DataBaseOperations:  # pylint: disable=too-few-public-methods
             description=product["description"],
         ) for product in scrape_list]
         Product.objects.bulk_create(objs)
+        self.logger.info("Products has been saved to DB")
 
 
 def main():
