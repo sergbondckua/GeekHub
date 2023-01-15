@@ -22,7 +22,7 @@
             {% for product in products %}
                 <tr>
                     <td>{{ forloop.counter }}</td>
-                    <td>{{ product.title|slice:"35" }}</td>
+                    <td>{{ product.title|slice:"100" }}</td>
                     <td>{{ product.price }}</td>
                     <td><a href="{% url 'product-detail' product.id %}" class="btn btn-secondary
                     btn-sm">View</a></td>
