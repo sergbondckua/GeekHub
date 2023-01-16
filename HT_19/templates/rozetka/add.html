@@ -2,22 +2,22 @@
 {% load static %}
 
 {% block title %}
-    {{ title }}
+  {{ title }}
 {% endblock %}
 
 {% block content %}
-    <div class="row">
-        <div class="col">
-            <form method="post">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="products">
-                        Add products ID
-                    </label>
-                    {{ form.products_id }}
-                </div>
-                <button type="submit" class="btn btn-outline-secondary">Submit</button>
-            </form>
+  <div class="row">
+    <div class="col">
+      <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="products">
+            Add products ID
+          </label>
+          {{ form.products_id }}
         </div>
+        <button type="submit" class="btn btn-outline-secondary">Submit</button>
+      </form>
     </div>
+  </div>
 {% endblock %}
