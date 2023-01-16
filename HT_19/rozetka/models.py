@@ -16,7 +16,7 @@ class Product(models.Model):
     category = models.CharField(max_length=255, null=True, blank=True)
     description = models.TextField(blank=True, default="", null=True)
 
-    class Meta:
+    class Meta:  #pylint: disable=too-few-public-methods
         """Meta object for Product"""
 
         ordering = ["title"]
