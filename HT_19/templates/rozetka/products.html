@@ -27,7 +27,7 @@
             {% if product.price > 0 %}
               {{ product.price }}</td>
             {% else %}
-              <b>Out of stock</b>
+              Out of stock
             {% endif %}
           <td><a href="{% url 'product-detail' product.id %}" class="btn btn-secondary
                     btn-sm">View</a></td>
