@@ -18,7 +18,7 @@ def add_id(request):
         if form.is_valid():
             form.cleaned_data.get("products_id")
             form.save()
-            pid = ScrapingTask.objects.all()[0]
+            pid = ScrapingTask.objects.all().first()
             with Popen(["python", "scrape.py", f"{pid.id}"]):
                 ...
             return redirect("index")
