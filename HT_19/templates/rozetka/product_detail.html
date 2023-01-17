@@ -9,9 +9,11 @@
   <h2>{{ product.title }}</h2>
   <ul class="list-group list-group-flush">
     <li class="list-group-item">
-      {{ product.price }} - <span
-        style="text-decoration: line-through;">{{ product.old_price }}
-        </span>
+      {% if product.price > 0 %}
+        {{ product.price }} - <span style="text-decoration: line-through;">{{ product.old_price }}</span>
+      {% else %}
+        <b>Out of stock</b>
+      {% endif %}
     </li>
     <li class="list-group-item">{{ product.brand }}</li>
     <li class="list-group-item">{{ product.description|safe }}</li>
