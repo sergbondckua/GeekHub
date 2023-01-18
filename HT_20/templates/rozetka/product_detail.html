@@ -1,0 +1,27 @@
+{% extends 'rozetka/base.html' %}
+{% load static %}
+
+{% block title %}
+  {{ title }}
+{% endblock %}
+
+{% block content %}
+  <h2>{{ product.title }}</h2>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">
+      {% if product.price > 0 %}
+        {{ product.price }} - <span style="text-decoration: line-through;">{{ product.old_price }}</span>
+      {% else %}
+        <b>Out of stock</b>
+      {% endif %}
+    </li>
+    <li class="list-group-item">{{ product.brand }}</li>
+    <li class="list-group-item">{{ product.description|safe }}</li>
+    <li class="list-group-item">
+      <a target="_blank" href="{{ product.href }}">
+        {{ product.product_id }}
+      </a>
+    </li>
+    <li class="list-group-item">{{ product.category }}</li>
+  </ul>
+{% endblock %}
