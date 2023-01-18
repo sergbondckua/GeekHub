@@ -67,17 +67,17 @@ class DataBaseOperations:  # pylint: disable=too-few-public-methods
 
     def write_products_to_db(self, scrape_list: list) -> None:
         """Write products to the database"""
-        objs = [Product(
-            product_id=product["id"],
-            title=product["title"],
-            old_price=product["old_price"],
-            price=product["price"],
-            href=product["href"],
-            brand=product["brand"],
-            category=product["category"],
-            description=product["description"],
-        ) for product in scrape_list]
-        Product.objects.bulk_create(objs)
+        for product in scrape_list:
+            Product.objects.update_or_create(
+                product_id=product["id"],
+                title=product["title"],
+                old_price=product["old_price"],
+                price=product["price"],
+                href=product["href"],
+                brand=product["brand"],
+                category=product["category"],
+                description=product["description"],
+            )
         self.logger.info("Products has been saved to DB")
 
 
