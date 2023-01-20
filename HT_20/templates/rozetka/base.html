@@ -8,11 +8,26 @@
 
   <!-- Bootstrap core CSS -->
   <link rel="stylesheet" href="{% static 'rozetka/css/bootstrap.css' %}">
+
+  <!-- Font Awesome Free's Solid and Brand files -->
+  <link href="{% static 'fontawesomefree/css/all.min.css' %}" rel="stylesheet" type="text/css">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{% static 'rozetka/css/main.css' %}">
+
+  <!-- JQuery -->
+  <script src="{% static 'rozetka/js/jquery-3.6.3.min.js' %}"></script>
+
+  <!-- Bootstrap core JS -->
+  <script src="{% static 'rozetka/js/bootstrap.bundle.min.js' %}"></script>
+
 </head>
 <body>
 <div
     class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
-  <h5 class="my-0 mr-md-auto font-weight-normal">HT_20</h5>
+  <h5 class="my-0 mr-md-auto font-weight-normal">
+    <i class="fa-brands fa-python fa-2xl"></i> GeekShop (HT_20)
+  </h5>
   {% block sidebar %}
     {% include "includes/rozetka/sidebar/sidebar.html" %}
   {% endblock %}
@@ -20,6 +35,9 @@
 <div class="container">
   <div class="mb-3 text-left">
     {% block content %}{% endblock %}
+    {% block pagination %}
+      {% include "includes/rozetka/pagination/pagination.html" %}
+    {% endblock %}
   </div>
   <footer class="pt-4 my-md-5 pt-md-5 border-top">
     <div class="row">

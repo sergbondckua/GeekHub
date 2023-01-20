@@ -4,6 +4,16 @@ from . import views
 
 urlpatterns = [
     path("", views.add_id, name="index"),
-    path("my-products/", views.my_products, name="my-products"),
-    path("product-view/<int:slug>/", views.product_detail, name="product-detail"),
+    path(
+        "products/",
+         views.ProductsListView.as_view(),
+         name="products-list"
+         ),
+    path(
+        "products/<int:pk>/",
+         views.ProductsDetailView.as_view(),
+         name="product-detail"
+         ),
 ]
+
+app_name = "rozetka"

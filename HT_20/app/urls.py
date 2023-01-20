@@ -19,8 +19,9 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('rozetka.urls')),
+    path("admin/", admin.site.urls),
+    path("", include("rozetka.urls")),
+    path("cart/", include("cart.urls"))
 ]
 
 if settings.DEBUG:

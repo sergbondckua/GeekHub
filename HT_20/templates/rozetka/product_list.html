@@ -1,0 +1,52 @@
+{% extends 'rozetka/base.html' %}
+{% load static %}
+
+{% block title %}
+  Products list
+{% endblock %}
+
+{% block content %}
+  <h2>Products List</h2>
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover">
+      <caption></caption>
+      <thead>
+      <tr class="table-active">
+        <th>#</th>
+        <th>Title</th>
+        <th>Price</th>
+        <th>Detail</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% if product_list %}
+        {% for product in product_list %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ product.title|slice:"100" }}</td>
+            <td>
+              {% if product.price > 0 %}
+                {{ product.price }}</td>
+              {% else %}
+                Out of stock
+              {% endif %}
+            <td>
+              <a href="{% url 'rozetka:product-detail' product.id %}" class="btn btn-outline-secondary
+              btn-sm">
+                <i class="fa-regular fa-eye"></i> View
+              </a>
+            </td>
+          </tr>
+        {% endfor %}
+      {% else %}
+        <tr>
+          <td>-</td>
+          <td>There are no products in DB</td>
+          <td>-</td>
+          <td>-</td>
+        </tr>
+      {% endif %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

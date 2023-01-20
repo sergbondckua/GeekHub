@@ -2,19 +2,13 @@
 {% load static %}
 
 {% block title %}
-  {{ title }}
+  {{ product.title }}
 {% endblock %}
 
 {% block content %}
-  <h2>{{ product.title }}</h2>
+  <h2 xmlns="http://www.w3.org/1999/html"
+      xmlns="http://www.w3.org/1999/html">{{ product.title }}</h2>
   <ul class="list-group list-group-flush">
-    <li class="list-group-item">
-      {% if product.price > 0 %}
-        {{ product.price }} - <span style="text-decoration: line-through;">{{ product.old_price }}</span>
-      {% else %}
-        <b>Out of stock</b>
-      {% endif %}
-    </li>
     <li class="list-group-item">{{ product.brand }}</li>
     <li class="list-group-item">{{ product.description|safe }}</li>
     <li class="list-group-item">
@@ -23,5 +17,33 @@
       </a>
     </li>
     <li class="list-group-item">{{ product.category }}</li>
+    <li class="list-group-item">
+      {#      Add to Cart form #}
+      {% if product.price > 0 %}
+        <form action="{% url 'cart:cart_add' product.id %}" method="post" class="form-inline">
+          {% csrf_token %}
+          <div class="form-group mb-2">
+            <h4>
+              <span class="text-muted" style="text-decoration:line-through;">
+                  {{ product.old_price }} ₴
+                </span><br>
+              <span class="mb2">
+                {{ product.price }} ₴
+
+              </span>
+            </h4>
+          </div>
+          <div class="form-group mx-sm-3 mb-2">
+            <label for="qnt" class="sr-only">Quantity:</label>
+            {{ cart_product_form.quantity }}
+          </div>
+          <button type="submit" class="btn btn-outline-dark mb-2">
+            <i class="fa-solid fa-cart-plus"></i> Add to cart
+          </button>
+        </form>
+      {% else %}
+        <b>Out of stock</b>
+      {% endif %}
+    </li>
   </ul>
 {% endblock %}

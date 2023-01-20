@@ -1,0 +1,76 @@
+{% extends "rozetka/base.html" %}
+{% load static %}
+
+{% block title %}
+  {{ title }}
+{% endblock %}
+
+{% block content %}
+  <h2>Your shopping cart</h2>
+  <p class="text-right">
+    <a class="text-reset" href="{% url "cart:cart_clear" %}">
+      <i class="fa-solid fa-broom"></i> Clear cart
+    </a>
+  </p>
+  <div class="table-responsive">
+    <table class="table table-borderless table-hover">
+      <caption></caption>
+      <thead>
+      <tr class="table-active">
+        <th>Product</th>
+        <th>Quantity</th>
+        <th>Unit price</th>
+        <th>Price</th>
+        <th>Remove</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for item in cart %}
+        {% with product=item.product %}
+          <tr>
+            <td>
+              <a class="text-reset text-decoration-none" href=
+                  "{% url 'rozetka:product-detail' product.id %}">
+                {{ product.title }}
+              </a>
+            </td>
+            <td>{{ item.quantity }}</td>
+            <td class="num">{{ item.price }}</td>
+            <td class="num">{{ item.total_price }}</td>
+            <td class="text-center">
+              <a class="text-reset" href="{% url "cart:cart_remove" product.id %}">
+                <i class="fa-solid fa-trash-can"></i>
+              </a>
+            </td>
+          </tr>
+        {% endwith %}
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="row">
+    <div class="col-sm">
+      <a class="btn btn-light" href="{% url "rozetka:products-list" %}" role="button">
+        Continue shopping
+      </a>
+    </div>
+    <div class="col-sm">
+      <h3>{{ cart.get_total_price }} ₴</h3>
+    </div>
+    <div class="col-sm">
+      {% if cart %}
+        <p class="text-right">
+          <button type="button" class="btn btn-dark" data-toggle="popover" title="Coming
+      Soon" data-content="Maybe it will work soon">Checkout
+          </button>
+        </p>
+      {% endif %}
+    </div>
+  </div>
+
+  <script type="text/javascript">
+      $(function () {
+          $('[data-toggle="popover"]').popover()
+      })
+  </script>
+{% endblock %}

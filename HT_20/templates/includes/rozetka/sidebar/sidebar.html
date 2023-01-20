@@ -1,5 +1,23 @@
 <nav class="my-2 my-md-0 mr-md-3">
-    <a class="p-2 text-dark" href="{% url 'index' %}">Home</a>
-    <a class="p-2 text-dark" href="{% url 'my-products' %}">My products</a>
-    <a class="p-2 text-dark" href="#">Cart</a>
+  <a class="p-2 text-dark" href="{% url 'rozetka:index' %}">
+    <i class="fa-solid fa-house"></i> Home
+  </a>
+  <a class="p-2 text-dark" href="{% url 'rozetka:products-list' %}">
+    <i class="fa-brands fa-product-hunt"></i> Products
+  </a>
+  {% with total_items=cart|length %}
+    {% if cart|length > 0 %}
+      <a class="p-2 text-dark" href="{% url 'cart:cart_detail' %}">
+        <i class="fa-solid fa-cart-shopping"></i> Cart
+      </a>
+      <span class="badge badge-pill badge-info fa-beat">
+          {{ total_items }}
+      </span>
+      <span class="badge badge-light">
+          {{ cart.get_total_price }} ₴
+      </span>
+    {% else %}
+      <i class="fa-solid fa-cart-shopping"></i> Cart: empty
+    {% endif %}
+  {% endwith %}
 </nav>
