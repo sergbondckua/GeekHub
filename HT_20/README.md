@@ -5,3 +5,7 @@
    * зміну кількості продукта (перевіряти на від'ємне значення як введеного значення, так і отриманої кількості),
    * видалення одного продукта,
    * очищення всієї корзини.
+
+![products](docs/img/products.png)
+![product-detail](docs/img/product_detaail.png)
+![cart](docs/img/cart.png)
