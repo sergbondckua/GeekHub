@@ -19,7 +19,7 @@ class Product(models.Model):
     class Meta:  #pylint: disable=too-few-public-methods
         """Meta object for Product"""
 
-        ordering = ["title"]
+        ordering = ["-id"]
         verbose_name = "Product"
         verbose_name_plural = "Products"
 

@@ -12,11 +12,12 @@
       <i class="fa-solid fa-broom"></i> Clear cart
     </a>
   </p>
-  <div class="table-responsive">
+  <div class="table-responsive shadow p-3 mb-5 bg-white rounded">
     <table class="table table-borderless table-hover">
       <caption></caption>
       <thead>
       <tr class="table-active">
+        <th>#</th>
         <th>Product</th>
         <th>Quantity</th>
         <th>Unit price</th>
@@ -28,6 +29,7 @@
       {% for item in cart %}
         {% with product=item.product %}
           <tr>
+          <td>{{ forloop.counter }}</td>
             <td>
               <a class="text-reset text-decoration-none" href=
                   "{% url 'rozetka:product-detail' product.id %}">

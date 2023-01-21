@@ -7,5 +7,5 @@
    * очищення всієї корзини.
 
 ![products](docs/img/products.png)
-![product-detail](docs/img/product_detaail.png)
+![product-detail](docs/img/product_detail.png)
 ![cart](docs/img/cart.png)

@@ -6,9 +6,8 @@
 {% endblock %}
 
 {% block content %}
-  <h2 xmlns="http://www.w3.org/1999/html"
-      xmlns="http://www.w3.org/1999/html">{{ product.title }}</h2>
-  <ul class="list-group list-group-flush">
+  <h2 >{{ product.title }}</h2>
+  <ul class="list-group list-group-flush shadow p-3 mb-5 bg-white rounded">
     <li class="list-group-item">{{ product.brand }}</li>
     <li class="list-group-item">{{ product.description|safe }}</li>
     <li class="list-group-item">
@@ -24,12 +23,13 @@
           {% csrf_token %}
           <div class="form-group mb-2">
             <h4>
-              <span class="text-muted" style="text-decoration:line-through;">
-                  {{ product.old_price }} ₴
-                </span><br>
+              {% if product.old_price > 0 %}
+                <span class="text-muted" style="text-decoration:line-through;">
+                    {{ product.old_price }} ₴
+              </span><br>
+              {% endif %}
               <span class="mb2">
                 {{ product.price }} ₴
-
               </span>
             </h4>
           </div>

@@ -6,47 +6,41 @@
 {% endblock %}
 
 {% block content %}
-  <h2>Products List</h2>
-  <div class="table-responsive">
-    <table class="table table-bordered table-hover">
-      <caption></caption>
-      <thead>
-      <tr class="table-active">
-        <th>#</th>
-        <th>Title</th>
-        <th>Price</th>
-        <th>Detail</th>
-      </tr>
-      </thead>
-      <tbody>
-      {% if product_list %}
-        {% for product in product_list %}
-          <tr>
-            <td>{{ forloop.counter }}</td>
-            <td>{{ product.title|slice:"100" }}</td>
-            <td>
-              {% if product.price > 0 %}
-                {{ product.price }}</td>
-              {% else %}
-                Out of stock
-              {% endif %}
-            <td>
-              <a href="{% url 'rozetka:product-detail' product.id %}" class="btn btn-outline-secondary
+  <h2 class="mb-5">Products List</h2>
+  {# Products list #}
+  {% if product_list %}
+    <div class="row row-cols-1 row-cols-md-4 justify-content-center">
+      {% for product in product_list %}
+        <div class="col mb-4 mr-4">
+          <div class="shadow p-6 mb-4 bg-white rounded">
+            <div class="card text-center" style="width: 18rem;">
+              <img src="{% static 'rozetka/img/no_image.png' %}" class="card-img-top"
+                   alt="product">
+              <div class="card-body">
+                <h6 class="card-title font-weight-lighter">{{ product.title|slice:"100" }}</h6>
+              </div>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                  {% if product.price > 0 %}
+                    <span class="font-weight-bolder">{{ product.price }}</span> ₴
+                  {% else %}
+                    Out of stock
+                  {% endif %}
+                </li>
+              </ul>
+              <div class="card-body">
+                <a href="{% url 'rozetka:product-detail' product.id %}" class="btn btn-outline-secondary
               btn-sm">
-                <i class="fa-regular fa-eye"></i> View
-              </a>
-            </td>
-          </tr>
-        {% endfor %}
-      {% else %}
-        <tr>
-          <td>-</td>
-          <td>There are no products in DB</td>
-          <td>-</td>
-          <td>-</td>
-        </tr>
-      {% endif %}
-      </tbody>
-    </table>
-  </div>
+                  <i class="fa-regular fa-eye"></i> Detail
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <h6>There are no products in DB</h6>
+  {% endif %}
+  {# End product list #}
 {% endblock %}
