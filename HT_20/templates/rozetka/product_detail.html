@@ -7,43 +7,47 @@
 
 {% block content %}
   <h2 class="mb-5">{{ product.title }}</h2>
-  <ul class="list-group list-group-flush mb-5 bg-white rounded">
-    <li class="list-group-item">{{ product.brand }}</li>
-    <li class="list-group-item">{{ product.description|safe }}</li>
-    <li class="list-group-item">
-      <a target="_blank" href="{{ product.href }}">
-        {{ product.product_id }}
-      </a>
-    </li>
-    <li class="list-group-item">{{ product.category }}</li>
-    <li class="list-group-item">
-      {#      Add to Cart form #}
-      {% if product.price > 0 %}
-        <form action="{% url 'cart:cart_add' product.id %}" method="post" class="form-inline">
-          {% csrf_token %}
-          <div class="form-group mb-2">
-            <h4>
-              {% if product.old_price > 0 %}
-                <span class="text-muted" style="text-decoration:line-through;">
-                    {{ product.old_price }} ₴
-              </span><br>
-              {% endif %}
-              <span class="mb2 text-danger">
-                {{ product.price }} ₴
-              </span>
-            </h4>
-          </div>
-          <div class="form-group mx-sm-3 mb-2">
-            <label for="qnt" class="sr-only">Quantity:</label>
-            {{ cart_product_form.quantity }}
-          </div>
-          <button type="submit" class="btn btn-outline-dark mb-2">
-            <i class="fa-solid fa-cart-plus"></i> Add to cart
-          </button>
-        </form>
-      {% else %}
-        <b>Out of stock</b>
-      {% endif %}
-    </li>
-  </ul>
+  <div class="row justify-content-center">
+    <div class="col-10">
+      <ul class="list-group list-group-flush mb-5 bg-white rounded">
+        <li class="list-group-item">{{ product.brand }}</li>
+        <li class="list-group-item">{{ product.description|safe }}</li>
+        <li class="list-group-item">
+          <a target="_blank" href="{{ product.href }}">
+            {{ product.product_id }}
+          </a>
+        </li>
+        <li class="list-group-item">{{ product.category }}</li>
+        <li class="list-group-item">
+          {#      Add to Cart form #}
+          {% if product.price > 0 %}
+            <form action="{% url 'cart:cart_add' product.id %}" method="post" class="form-inline">
+              {% csrf_token %}
+              <div class="form-group mb-2">
+                <h4>
+                  {% if product.old_price > 0 %}
+                    <span class="text-muted" style="text-decoration:line-through;">
+                        {{ product.old_price }} ₴
+                  </span><br>
+                  {% endif %}
+                  <span class="mb2 text-danger">
+                    {{ product.price }} ₴
+                  </span>
+                </h4>
+              </div>
+              <div class="form-group mx-sm-3 mb-2">
+                <label for="qnt" class="sr-only">Quantity:</label>
+                {{ cart_product_form.quantity }}
+              </div>
+              <button type="submit" class="btn btn-outline-dark mb-2">
+                <i class="fa-solid fa-cart-plus"></i> Add to cart
+              </button>
+            </form>
+          {% else %}
+            <b>Out of stock</b>
+          {% endif %}
+        </li>
+      </ul>
+    </div>
+  </div>
 {% endblock %}
