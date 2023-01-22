@@ -6,8 +6,8 @@
 {% endblock %}
 
 {% block content %}
-  <h2 >{{ product.title }}</h2>
-  <ul class="list-group list-group-flush shadow p-3 mb-5 bg-white rounded">
+  <h2 class="mb-5">{{ product.title }}</h2>
+  <ul class="list-group list-group-flush mb-5 bg-white rounded">
     <li class="list-group-item">{{ product.brand }}</li>
     <li class="list-group-item">{{ product.description|safe }}</li>
     <li class="list-group-item">
@@ -28,7 +28,7 @@
                     {{ product.old_price }} ₴
               </span><br>
               {% endif %}
-              <span class="mb2">
+              <span class="mb2 text-danger">
                 {{ product.price }} ₴
               </span>
             </h4>

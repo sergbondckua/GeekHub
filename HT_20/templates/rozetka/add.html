@@ -6,13 +6,13 @@
 {% endblock %}
 
 {% block content %}
-  <h2>Add ID's </h2>
-  <div class="row">
-    <div class="col">
+  <h2 class="mb-5">Add ID's </h2>
+  <div class="row justify-content-center">
+    <div class="col-6">
       <form method="post">
         {% csrf_token %}
         <div class="form-group">
-          <label for="products">
+          <label for="products" class="sr-only">
             Add products ID
           </label>
           {{ form.products_id }}

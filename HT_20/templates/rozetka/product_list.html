@@ -9,30 +9,30 @@
   <h2 class="mb-5">Products List</h2>
   {# Products list #}
   {% if product_list %}
-    <div class="row row-cols-1 row-cols-md-4 justify-content-center">
+    <div class="row row-cols-2 row-cols-md-6 justify-content-center">
       {% for product in product_list %}
-        <div class="col mb-4 mr-4">
-          <div class="shadow p-6 mb-4 bg-white rounded">
-            <div class="card text-center" style="width: 18rem;">
+        <div class="col mb-2 mr-2">
+          <div class="mb-2 bg-white rounded">
+            <div class="card text-center" style="width: 12rem;">
               <img src="{% static 'rozetka/img/no_image.png' %}" class="card-img-top"
                    alt="product">
               <div class="card-body">
-                <h6 class="card-title font-weight-lighter">{{ product.title|slice:"100" }}</h6>
-              </div>
-              <ul class="list-group list-group-flush">
-                <li class="list-group-item">
-                  {% if product.price > 0 %}
-                    <span class="font-weight-bolder">{{ product.price }}</span> ₴
-                  {% else %}
-                    Out of stock
-                  {% endif %}
-                </li>
-              </ul>
-              <div class="card-body">
-                <a href="{% url 'rozetka:product-detail' product.id %}" class="btn btn-outline-secondary
-              btn-sm">
-                  <i class="fa-regular fa-eye"></i> Detail
-                </a>
+                <p class="card-title font-weight-lighter" style="font-size: smaller">
+                    <a class="text-reset" href="{% url 'rozetka:product-detail' product.id %}">
+                        {{ product.title|slice:"35" }}
+                    </a>
+                </p>
+                  <p class="card-text">
+                    {% if product.price > 0 %}
+                        <span class="font-weight-bolder text-danger">
+                            {{ product.price }} ₴
+                        </span>
+                    {% else %}
+                        <span class="text-muted">
+                            Out of stock
+                        </span>
+                    {% endif %}
+                  </p>
               </div>
             </div>
           </div>
