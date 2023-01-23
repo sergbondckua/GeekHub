@@ -9,15 +9,15 @@
   <h2 class="mb-5">Products List</h2>
   {# Products list #}
   {% if product_list %}
-    <div class="row row-cols-2 row-cols-md-6 justify-content-center">
+    <div class="row row-cols-2 row-cols-md-5 justify-content-center">
       {% for product in product_list %}
         <div class="col mb-2 mr-2">
           <div class="mb-2 bg-white rounded">
-            <div class="card text-center" style="width: 12rem;">
+            <div class="card text-center" style="height:22rem; width: 14rem;">
               <img src="{% static 'rozetka/img/no_image.png' %}" class="card-img-top"
                    alt="product">
               <div class="card-body">
-                <p class="card-title font-weight-lighter" style="font-size: smaller">
+                <p class="card-title" style="font-size: medium">
                     <a class="text-reset" href="{% url 'rozetka:product-detail' product.id %}">
                         {{ product.title|slice:"35" }}
                     </a>

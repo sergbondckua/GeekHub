@@ -31,7 +31,7 @@ def add_id(request):
 class ProductsListView(generic.ListView):
     """Get product list"""
     model = Product
-    paginate_by = 10
+    paginate_by = 12
 
 
 class ProductsDetailView(generic.DetailView):
