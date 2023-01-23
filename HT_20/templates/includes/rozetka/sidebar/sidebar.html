@@ -17,7 +17,8 @@
           {{ cart.get_total_price }} ₴
       </span>
     {% else %}
-      <i class="fa-solid fa-cart-shopping"></i> Cart: empty
+      <i class="fa-solid fa-cart-shopping"></i> Cart:
+      <span class="text-muted">empty</span>
     {% endif %}
   {% endwith %}
 </nav>
