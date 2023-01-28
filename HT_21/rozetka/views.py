@@ -4,13 +4,13 @@ from subprocess import Popen
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.decorators import user_passes_test, login_required
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views import generic
 
 from .forms import ScrapingTaskForm
-from .models import Product, ScrapingTask, Category
+from .models import Product, ScrapingTask
 from cart.forms import CartAddProductForm
 
 
@@ -33,19 +33,16 @@ def add_id(request):
 
     return render(request, "rozetka/products_add.html", context=context)
 
-def index(request):
-    """Index page"""
-    context = {
-        "title": "Home",
-        "hello": "Hello",
-    }
-    return render(request, "rozetka/home.html", context=context)
+
+class IndexView(generic.TemplateView):
+    """View Home Page"""
+    template_name = "rozetka/home.html"
 
 
 class SuperUserRequiredMixin:  # pylint: disable=too-few-public-methods
     """
     View mixin which requires that the authenticated user is a super user
-    (i.e. `is_superuser` is True).
+    ('is_superuser' is True).
     """
 
     @method_decorator(login_required)
