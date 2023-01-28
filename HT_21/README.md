@@ -26,3 +26,12 @@
 11. До сторінки додавання нових продуктів доступ має тільки суперюзер
 # Solution:
 
+Form and access:
+![products](docs/img/1.png)
+![img.png](docs/img/4.png)
+User:
+![products](docs/img/2.png)
+User:
+![products](docs/img/3.png)
+Superuser:
+![products](docs/img/5.png)

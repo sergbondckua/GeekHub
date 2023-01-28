@@ -79,6 +79,9 @@
       {% else %}
         <h6>There are no products in DB</h6>
       {% endif %}
+    {% block pagination %}
+      {% include "includes/rozetka/pagination/pagination.html" %}
+    {% endblock %}
     </div>
   </div>
 
