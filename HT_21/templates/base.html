@@ -1,0 +1,57 @@
+<!doctype html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>{% block title %}{% endblock %} - GeekShop HT_20</title>
+
+  <!-- Favicon -->
+  <link type="image/png" sizes="16x16" rel="icon" href="{% static 'rozetka/favicon.png' %}">
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="{% static 'rozetka/css/bootstrap.css' %}">
+
+  <!-- Font Awesome Free's Solid and Brand files -->
+  <link href="{% static 'fontawesomefree/css/all.min.css' %}" rel="stylesheet" type="text/css">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{% static 'rozetka/css/main.css' %}">
+
+  <!-- JQuery -->
+  <script src="{% static 'rozetka/js/jquery-3.6.3.min.js' %}"></script>
+
+  <!-- Bootstrap core JS -->
+  <script src="{% static 'rozetka/js/bootstrap.bundle.min.js' %}"></script>
+
+  <!-- Custom JS -->
+  <script src="{% static 'rozetka/js/main.js' %}"></script>
+
+</head>
+<body>
+<div
+    class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+  <h5 class="my-0 mr-md-auto font-weight-normal">
+    <i class="fa-brands fa-python fa-2xl"></i> GeekShop (HT_21)
+  </h5>
+  {% block sidebar %}
+    {% include "includes/rozetka/sidebar/sidebar.html" %}
+  {% endblock %}
+</div>
+<div class="container">
+  <div class="mb-3 text-left">
+    {% block content %}{% endblock %}
+    {% block pagination %}
+      {% include "includes/rozetka/pagination/pagination.html" %}
+    {% endblock %}
+  </div>
+  <footer class="pt-4 my-md-5 pt-md-5 border-top">
+    <div class="row">
+      <div class="col-12 col-md">
+        <small class="d-block mb-3 text-muted">© 2023 Serhii Bondarenko</small>
+      </div>
+    </div>
+  </footer>
+</div>
+</body>
+</html>

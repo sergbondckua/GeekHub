@@ -25,7 +25,7 @@
               {% csrf_token %}
               <div class="form-group mb-2">
                 <h4>
-                  {% if product.old_price > 0 and product.price < product.old_price %}
+                  {% if product.price < product.old_price %}
                     <span class="text-muted" style="text-decoration:line-through;">
                         {{ product.old_price }} ₴
                   </span><br>

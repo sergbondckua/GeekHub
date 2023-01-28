@@ -1,0 +1,63 @@
+{% load crispy_forms_filters %}
+<nav class="my-2 my-md-0 mr-md-3">
+  <a class="p-2 text-dark" href="{% url 'rozetka:index' %}">
+    <i class="fa-solid fa-house"></i> Home
+  </a>
+  <a class="p-2 text-dark" href="{% url 'rozetka:products-list' %}">
+    <i class="fa-brands fa-product-hunt"></i> Products
+  </a>
+  {% with total_items=cart|length %}
+    {% if cart|length > 0 %}
+      <a class="p-2 text-dark" href="{% url 'cart:cart_detail' %}">
+        <i class="fa-solid fa-cart-shopping"></i> Cart
+      </a>
+      <span class="badge badge-pill badge-info fa-beat">
+          {{ total_items }}
+      </span>
+      <span class="badge badge-light">
+          {{ cart.get_total_price }} ₴
+      </span>
+    {% else %}
+      <i class="fa-solid fa-cart-shopping"></i> Cart:
+      <span class="text-muted">empty</span>
+    {% endif %}
+  {% endwith %}
+  {% if user.is_authenticated %}
+    <a class="p-2 text-dark dropdown-toggle" href="#" role="button" data-toggle="dropdown"
+       aria-expanded="false">
+      <i class="fa-brands fa-elementor"></i> {{ user.username|upper }}
+    </a>
+    <div class="dropdown-menu">
+      <div class="dropdown-divider"></div>
+      <a class="p-2 text-dark" href="{% url 'logout' %}">
+        <i class="fa-solid fa-right-from-bracket"></i> Sign out
+      </a>
+    </div>
+  {% else %}
+
+    <a class="p-2 text-dark dropdown-toggle" href="#" role="button" data-toggle="dropdown"
+       aria-expanded="false">
+      <i class="fa-solid fa-user"></i> Sign in
+    </a>
+    <div class="dropdown-menu p-4">
+      <form method="post" action="{% url "login" %}">
+        {% csrf_token %}
+        <div class="form-group">
+          <label class="sr-only" for="name">Username</label>
+          <input type="text" class="form-control" id="name" name="username"
+                 placeholder="Username">
+        </div>
+        <div class="form-group">
+          <label class="sr-only" for="password">Password</label>
+          <input type="password" class="form-control" id="password" name="password"
+                 placeholder="Password">
+        </div>
+        <button type="submit" class="btn btn-success btn-block">
+          Sign In
+        </button>
+        <input type="hidden" name="next" value="{{ next }}">
+      </form>
+    </div>
+
+  {% endif %}
+</nav>
