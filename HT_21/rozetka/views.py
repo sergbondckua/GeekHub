@@ -31,7 +31,15 @@ def add_id(request):
             return redirect("rozetka:index")
         context["errors"] = form.errors
 
-    return render(request, "rozetka/add.html", context=context)
+    return render(request, "rozetka/products_add.html", context=context)
+
+def index(request):
+    """Index page"""
+    context = {
+        "title": "Home",
+        "hello": "Hello",
+    }
+    return render(request, "rozetka/home.html", context=context)
 
 
 class SuperUserRequiredMixin:  # pylint: disable=too-few-public-methods
@@ -63,7 +71,7 @@ class ProductsDetailView(generic.DetailView):
     model = Product
 
     def get_context_data(self, **kwargs):
-        # Call the base implementation first to get a context
+        """Call the base implementation first to get a context"""
         context = super().get_context_data(**kwargs)
         context["cart_product_form"] = CartAddProductForm()
         return context

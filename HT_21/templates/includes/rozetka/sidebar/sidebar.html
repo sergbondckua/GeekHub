@@ -28,7 +28,12 @@
       <i class="fa-brands fa-elementor"></i> {{ user.username|upper }}
     </a>
     <div class="dropdown-menu">
-      <div class="dropdown-divider"></div>
+      {% if user.is_superuser %}
+        <a class="p-2 text-dark" href="{% url 'rozetka:products-add' %}">
+          <i class="fa-solid fa-plus"></i> Add products
+        </a>
+        <div class="dropdown-divider"></div>
+      {% endif %}
       <a class="p-2 text-dark" href="{% url 'logout' %}">
         <i class="fa-solid fa-right-from-bracket"></i> Sign out
       </a>
