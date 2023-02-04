@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% load main_tags %}
+{% load static %}
+
+
+{% block title %}
+  Products list
+  {% if category %}{{ category.name }}{% else %}Products{% endif %}
+{% endblock %}
+
+{% block content %}
+  <h2 class="mb-5">Products List</h2>
+
+  <!-- Messages -->
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-danger" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+
+  <div class="row">
+
+    <!-- Categories List -->
+    <div class="col-3">
+      <div class="list-group">
+        {% get_categories as category_list %}
+        <span class="text-dark text-center font-weight-bolder list-group-item
+          list-group-item-action">Categories</span>
+        {% for category in category_list %}
+          <a href="{% url 'rozetka:product-category' category.id %}" class="list-group-item
+          list-group-item-action" aria-current="true">
+            {{ category.title }} <span class="float-right badge badge-secondary">
+            {% get_count_products_in_category category.id %}
+          </span>
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Products List -->
+    <div class="col">
+      {% if product_list %}
+        <div class="row row-cols-2 row-cols-md-4">
+          {% for product in product_list %}
+            <div class="col mb-2 mr-8">
+              <div class="mb-2 bg-white rounded">
+                <div class="card text-center" style="height:22rem; width: 13rem;">
+                  <img src="{% static 'rozetka/img/no_image.png' %}" class="card-img-top"
+                       alt="product">
+                  <div class="card-body">
+                    <p class="card-title" style="font-size: medium">
+                      <a class="text-reset" href="{% url 'rozetka:product-detail' product.id %}">
+                        {{ product.title|slice:"35" }}
+                      </a>
+                    </p>
+                    <p class="card-text">
+                      {% if product.price > 0 %}
+                        <span class="font-weight-light text-primary">
+                            {{ product.price }} ₴
+                        </span>
+                      {% else %}
+                        <span class="text-muted">
+                            Out of stock
+                        </span>
+                      {% endif %}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <h6>There are no products in DB</h6>
+      {% endif %}
+    {% block pagination %}
+      {% include "includes/rozetka/pagination/pagination.html" %}
+    {% endblock %}
+    </div>
+  </div>
+
+
+{% endblock %}

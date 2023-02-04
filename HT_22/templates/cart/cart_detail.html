@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+  {{ title }}
+{% endblock %}
+
+{% block content %}
+  <h2 class="mb-5">Your shopping cart</h2>
+  <p class="text-right">
+    <a id="clear-cart" class="text-reset text-danger text-decoration-none" href=
+        "{% url "cart:cart_clear" %}">
+      <i class="fa-solid fa-broom"></i> Clear cart
+    </a>
+  </p>
+  <div class="table-responsive shadow p-3 mb-5 bg-white rounded">
+    <table class="table table-borderless table-hover">
+      <caption></caption>
+      <thead>
+      <tr class="table-light">
+        <th>#</th>
+        <th>Product</th>
+        <th>Quantity</th>
+        <th>Unit price</th>
+        <th>Price</th>
+        <th>Remove</th>
+      </tr>
+      </thead>
+      <tbody id="body-cart">
+      {% for item in cart %}
+        {% with product=item.product %}
+          <tr id="cart-item{{ product.id }}">
+            <td>{{ forloop.counter }}</td>
+            <td>
+              <a class="text-reset text-decoration-none" href=
+                  "{% url 'rozetka:product-detail' product.id %}">
+                {{ product.title }}
+              </a>
+            </td>
+            <td>{{ item.quantity }}</td>
+            <td class="num">{{ item.price }}</td>
+            <td class="num">{{ item.total_price }}</td>
+            <td class="text-center">
+              {% csrf_token %}
+              <input id="pid" type="hidden" value="{{ product.id }}" name="pid">
+              <a id="remove-item" class="text-reset" href=
+                  "{% url "cart:cart_remove" %}" data-pid="{{ product.id }}">
+                <i class="text-danger fa-solid fa-trash-can"></i>
+              </a>
+            </td>
+          </tr>
+        {% endwith %}
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="row">
+    <div class="col-sm">
+      <a class="btn btn-light text-primary" href="{% url "rozetka:products-list" %}" role="button">
+        Continue shopping
+      </a>
+    </div>
+    <div class="col-sm">
+      <h3>
+        <span id="total-price">{{ cart.get_total_price }}</span> ₴
+      </h3>
+    </div>
+    <div class="col-sm">
+      {% if cart %}
+        <p class="text-right">
+          <button type="button" class="btn btn-success" data-toggle="popover" title="Coming
+      Soon" data-content="Maybe it will work soon">
+            Checkout
+          </button>
+        </p>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

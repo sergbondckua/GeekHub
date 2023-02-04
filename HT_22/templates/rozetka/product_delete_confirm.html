@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load crispy_forms_filters %}
+{% load static %}
+
+{% block title %}
+  Delete {{ product.title }}
+{% endblock %}
+
+{% block content %}
+  <h2 class="mb-5"><span class="text-danger">Delete:</span><br> {{ product.title }}</h2>
+  <p>The product will be removed permanently! Are you sure you want to remove this product?</p>
+  <form method="post" action="">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Yes, delete</button>
+  </form>
+{% endblock %}
