@@ -9,9 +9,8 @@ from .forms import CartAddProductForm
 
 
 @require_POST
-def cart_add(request):
+def cart_add(request, product_id):
     """Add a new product in the cart"""
-    product_id = request.POST.get('pid')
     cart = Cart(request)
     product = get_object_or_404(Product, id=product_id)
     form = CartAddProductForm(request.POST)
@@ -30,9 +29,8 @@ def cart_add(request):
     )
 
 
-def cart_remove(request):
+def cart_remove(request, product_id):
     """Remove a product from the cart"""
-    product_id = request.GET['product_id']
     cart = Cart(request)
     product = get_object_or_404(Product, id=product_id)
     cart.remove(product)
@@ -40,7 +38,6 @@ def cart_remove(request):
         {
             "status": "product remove from cart success",
             "qty": cart.__len__(),
-            "total_price": cart.get_total_price()
         }
     )
 
@@ -52,13 +49,15 @@ def cart_clear(request):
     return JsonResponse(
         {
             "status": "Clear cart success",
-            "qty": cart.__len__(),
-            "total_price": 0
         }
     )
 
 
 def cart_detail(request):
     """Cart status detail"""
-    context = {"title": "Cart", "cart": Cart(request)}
+    cart = Cart(request)
+    for item in cart:
+        item["update_qty_field"] = CartAddProductForm(
+            {"quantity": item["quantity"], "update": True})
+    context = {"title": "Cart", "cart": cart, }
     return render(request, "cart/cart_detail.html", context=context)

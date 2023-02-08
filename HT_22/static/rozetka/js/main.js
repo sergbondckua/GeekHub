@@ -21,28 +21,42 @@ $(function () {
                 // alert the error if any error occured
                 alert(response["responseJSON"]["error"]);
             }
-        })
+        });
+    })
+
+    // Update qty of the product in cart
+    $(document).on("click", "#upd", function (evt) {
+        evt.preventDefault();
+        const selector = $(this).closest("#body-cart");
+        $.ajax({
+            type: "POST",
+            url: selector.find("form").attr("action"),
+            data: $("#change-qty-cart").serialize(),
+            success: function (response) {
+                console.log(response);
+                $("#count_item").text(response.qty);
+                $(".cart-view").load(location.href + " .cart-view");
+            },
+            error: function (response) {
+                // alert the error if any error occured
+                alert(response["responseJSON"]["error"]);
+            }
+        });
     })
 
     //Removing the product from the cart
-    $(document).on("click","#remove-item", function (event) {
+    $(document).on("click", "#remove-item", function (event) {
         // preventing from page reload and default actions
         event.preventDefault();
 
         let pid = $(this).attr("data-pid");
-        let total = $("#total-price").val()
         // make GET ajax call
         $.ajax({
-            type: "GET",
-            url: "/cart/remove/",
-            data: {
-                "product_id": pid,
-            },
+            url: $("#remove-item").attr("href"),
             success: function (response) {
                 console.log(response);
-                $( "#cart-item" + pid ).remove();
                 $("#count_item").text(response.qty);
-                $("#total-price").text(response.total_price);
+                $(".cart-view").load(location.href + " .cart-view");
             },
             error: function (response) {
                 // alert the error if any error occured
@@ -52,18 +66,18 @@ $(function () {
     })
 
     //Clearing cart
-    $(document).on("click","#clear-cart", function (event) {
+    $(document).on("click", "#clear-cart", function (event) {
         // preventing from page reload and default actions
         event.preventDefault();
         // make GET ajax call
         $.ajax({
-            type: "GET",
-            url: "/cart/clear/",
+            // type: "GET",
+            url: $("#clear-cart").attr("href"),
             success: function (response) {
                 console.log(response);
-                $( "#body-cart").remove();
                 $("#count_item").text("0");
-                $("#total-price").text(response.total_price);
+                $(".cart-view").load(location.href + " .cart-view");
+
             },
             error: function (response) {
                 // alert the error if any error occured

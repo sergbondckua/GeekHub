@@ -68,6 +68,12 @@ class ProductsListView(generic.ListView):
     model = Product
     paginate_by = 12
 
+    def get_context_data(self, **kwargs):
+        """Call the base implementation first to get a context."""
+        context = super().get_context_data(**kwargs)
+        context["cart_product_form"] = CartAddProductForm()
+        return context
+
 
 class ProductsDetailView(generic.DetailView):
     """Get product detail."""

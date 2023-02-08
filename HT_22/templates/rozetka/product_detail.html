@@ -32,7 +32,7 @@
           <li class="list-group-item">
             {#      Add to Cart form #}
             {% if product.price > 0 %}
-              <form id="add" action="{% url 'cart:cart_add' %}" method="post"
+              <form id="add" action="{% url 'cart:cart_add' product.id%}" method="post"
                     class="form-inline">
                 {% csrf_token %}
                 <div class="form-group mb-2">
@@ -55,7 +55,6 @@
                   <label for="qnt" class="sr-only">Quantity:</label>
                   {{ cart_product_form.quantity }}
                 </div>
-                <input type="hidden" value="{{ product.id }}" name="pid">
                 <button type="submit" class="btn btn-success mb-2">
                   <i class="fa-solid fa-cart-plus"></i> Add to cart
                 </button>
