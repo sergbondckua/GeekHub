@@ -24,7 +24,7 @@ def cart_add(request, product_id):
     return JsonResponse(
         {
             "status": "product add to cart success",
-            "qty": cart.__len__(),
+            "id": product_id,
         }
     )
 
@@ -37,7 +37,7 @@ def cart_remove(request, product_id):
     return JsonResponse(
         {
             "status": "product remove from cart success",
-            "qty": cart.__len__(),
+            "id": product_id,
         }
     )
 

@@ -6,14 +6,14 @@
 {% endblock %}
 
 {% block content %}
+  <h2 class="mb-5">Your shopping cart</h2>
+  <p class="text-right">
+    <a id="clear-cart" class="text-reset text-danger text-decoration-none" href=
+        "{% url "cart:cart_clear" %}">
+      <i class="fa-solid fa-broom"></i> Clear cart
+    </a>
+  </p>
   <div class="cart-view">
-    <h2 class="mb-5">Your shopping cart</h2>
-    <p class="text-right">
-      <a id="clear-cart" class="text-reset text-danger text-decoration-none" href=
-          "{% url "cart:cart_clear" %}">
-        <i class="fa-solid fa-broom"></i> Clear cart
-      </a>
-    </p>
     <div class="table-responsive shadow p-3 mb-5 bg-white rounded">
       <table class="table table-borderless table-hover">
         <caption></caption>
@@ -39,16 +39,23 @@
                 </a>
               </td>
               <td>
-                <form id="change-qty-cart" action="{% url 'cart:cart_add' product.id %}"
-                      method="post"
-                      class="form-inline">
+                <!-- Form -->
+                <form id="change-qty-cart{{ product.id }}" action=
+                    "{% url 'cart:cart_add' product.id %}"
+                      method="post" class="form-inline">
                   {% csrf_token %}
-                  {{ item.update_qty_field.quantity }}
-                  {{ item.update_qty_field.update }}
-                  <button id="upd" type="submit" class="btn btn-sm btn-primary ml-1">
-                    <i class="fa-solid fa-rotate"></i>
-                  </button>
+                  <div class="input-group mb-3">
+                    {{ item.update_qty_field.quantity }}
+                    {{ item.update_qty_field.update }}
+                    <div class="input-group-append">
+                      <button data-pid="{{ product.id }}" id="upd" type="submit" class="btn
+                      btn-sm btn-primary">
+                        <i class="fa-solid fa-rotate"></i>
+                      </button>
+                    </div>
+                  </div>
                 </form>
+                <!-- End Form-->
               </td>
               <td class="num">{{ item.price }}</td>
               <td class="num">{{ item.total_price }}</td>
@@ -65,29 +72,30 @@
         {% endfor %}
         </tbody>
       </table>
+      <h3>
+        <span class="float-right">{{ cart.get_total_price }} ₴</span>
+      </h3>
     </div>
-    <div class="row">
-      <div class="col-sm">
-        <a class="btn btn-light text-primary" href="{% url "rozetka:products-list" %}"
-           role="button">
-          Continue shopping
-        </a>
-      </div>
-      <div class="col-sm">
-        <h3>
-          <span id="total-price">{{ cart.get_total_price }}</span> ₴
-        </h3>
-      </div>
-      <div class="col-sm">
-        {% if cart %}
-          <p class="text-right">
-            <button type="button" class="btn btn-success" data-toggle="popover" title="Coming
+  </div>
+  <div class="row">
+    <div class="col-sm">
+      <a class="btn btn-light text-primary" href="{% url "rozetka:products-list" %}"
+         role="button">
+        Continue shopping
+      </a>
+    </div>
+    <div class="col-sm">
+      <!--Some text-->
+    </div>
+    <div class="col-sm">
+      {% if cart %}
+        <p class="text-right">
+          <button type="button" class="btn btn-success" data-toggle="popover" title="Coming
       Soon" data-content="Maybe it will work soon">
-              Checkout
-            </button>
-          </p>
-        {% endif %}
-      </div>
+            Checkout
+          </button>
+        </p>
+      {% endif %}
     </div>
   </div>
 {% endblock %}

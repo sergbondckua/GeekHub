@@ -60,24 +60,23 @@
                       </a>
                     </p>
                     {% if product.price > 0 %}
-                      <p class="card-text">
-                        <span class="font-weight-light text-primary">
-                            {{ product.price }} ₴
-                        </span>
-                      </p>
+
                       {% if user.is_authenticated %}
-                        <form class="text-center" id="change-qty-cart" action=
+                        <form class="text-center" id="change-qty-cart{{ product.id }}" action=
                             "{% url 'cart:cart_add' product.id %}"
                               method="post"
                               class="form-inline">
                           {% csrf_token %}
                           <label>
-                            <input type="hidden" value="1" name="quantity">
+                            <span class="font-weight-light text-primary">
+                              {{ product.price }} ₴
+                            </span>
                           </label>
+                          <input type="hidden" value="1" name="quantity">
                           {{ cart_product_form.update }}
-                          <button id="upd" type="submit"
+                          <button data-pid="{{ product.id }}" id="upd" type="submit"
                                   class="btn btn-sm btn-outline-success ml-1">
-                            <i class="fa-solid fa-cart-plus"></i> Add to cart
+                            <i class="fa-solid fa-cart-plus"></i>
                           </button>
                         </form>
                       {% endif %}

@@ -26,7 +26,7 @@
   </div>
 </nav>
 
-<nav class="my-2 my-md-0 mr-md-3" aria-label="">
+<nav class="my-2 my-md-0 mr-md-3" aria-label="" id="nav">
   <a class="p-2 text-dark" href="{% url 'rozetka:index' %}">
     <i class="fa-solid fa-house"></i> Home
   </a>
@@ -39,9 +39,11 @@
     <a class="p-2 text-dark" href="{% url 'cart:cart_detail' %}">
       <i class="fa-solid fa-cart-shopping"></i> Cart
     </a>
-    <span class="badge badge-pill badge-info" id="count_item">
+    {% if total_items > 0 %}
+      <span class="badge badge-pill badge-info fa-beat">
           {{ total_items }}
       </span>
+    {% endif %}
   {% endwith %}
 
   <!--Users name-->

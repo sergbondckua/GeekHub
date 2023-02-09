@@ -10,9 +10,8 @@ class CartAddProductForm(forms.Form):
         choices=PRODUCT_QUANTITY_CHOICES,
         coerce=int,
         widget=forms.Select(attrs={
-            "class": "form-control-sm qty-input",
+            "class": "custom-select qty-input",
             "id": "qnt",
-            "name": "quantity"
         }),
     )
     update = forms.BooleanField(required=False, initial=False, widget=forms.HiddenInput)
