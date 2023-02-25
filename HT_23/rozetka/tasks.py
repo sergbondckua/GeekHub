@@ -1,7 +1,6 @@
 """Tasks"""
 from celery import shared_task
 
-from rozetka.models import ScrapingTask
 from rozetka.scrape import RozetkaAPI, DataBaseOperations
 
 
