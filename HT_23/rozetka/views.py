@@ -27,9 +27,7 @@ def add_id(request):
     if request.method == "POST":
         if form.is_valid():
             form.cleaned_data.get("products_id")
-            form.save()
-            pid = ScrapingTask.objects.all().first().id
-            send_ids_to_rozetka.delay(pid)
+            send_ids_to_rozetka.delay(form.instance.products_id.split())
             return redirect("rozetka:index")
         context["errors"] = form.errors
 
