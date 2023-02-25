@@ -32,5 +32,6 @@ class ProductsUpdateForm(forms.ModelForm):
 
     class Meta:  # pylint: disable=too-few-public-methods
         """Meta class"""
+
         model = Product
         fields = "__all__"

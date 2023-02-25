@@ -7,7 +7,7 @@ from rozetka.scrape import RozetkaAPI, DataBaseOperations
 
 @shared_task
 def send_ids_to_rozetka(product_id):
-    """"Process send id's and get products from rozetka"""
+    """ "Process send id's and get products from rozetka"""
     tasks = ScrapingTask.objects.get(id=product_id).products_id.split("\n")
     list_tasks = [task.strip("\r") for task in tasks]
     api = RozetkaAPI().get_item_data

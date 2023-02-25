@@ -9,9 +9,11 @@ class CartAddProductForm(forms.Form):
     quantity = forms.TypedChoiceField(
         choices=PRODUCT_QUANTITY_CHOICES,
         coerce=int,
-        widget=forms.Select(attrs={
-            "class": "custom-select qty-input",
-            "id": "qnt",
-        }),
+        widget=forms.Select(
+            attrs={
+                "class": "custom-select qty-input",
+                "id": "qnt",
+            }
+        ),
     )
     update = forms.BooleanField(required=False, initial=False, widget=forms.HiddenInput)

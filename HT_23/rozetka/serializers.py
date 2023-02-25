@@ -8,6 +8,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:  # pylint: disable=too-few-public-methods
         """Class Meta"""
+
         model = Category
         fields = "__all__"
 
@@ -17,5 +18,6 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:  # pylint: disable=too-few-public-methods
         """Class Meta"""
+
         model = Product
         fields = "__all__"

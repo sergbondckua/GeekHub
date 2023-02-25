@@ -58,6 +58,10 @@ def cart_detail(request):
     cart = Cart(request)
     for item in cart:
         item["update_qty_field"] = CartAddProductForm(
-            {"quantity": item["quantity"], "update": True})
-    context = {"title": "Cart", "cart": cart, }
+            {"quantity": item["quantity"], "update": True}
+        )
+    context = {
+        "title": "Cart",
+        "cart": cart,
+    }
     return render(request, "cart/cart_detail.html", context=context)

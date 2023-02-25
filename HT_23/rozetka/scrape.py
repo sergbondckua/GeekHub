@@ -11,15 +11,17 @@ from rozetka.models import Product, Category
 class RozetkaAPI:  # pylint: disable=too-few-public-methods
     """Parser of the product by ID from Rozetka.ua"""
 
-    _URL_API = "https://rozetka.com.ua/api/product-api/v4/goods/" \
-               "get-main?front-type='xl&country=UA&lang=ua&goodsId="
+    _URL_API = (
+        "https://rozetka.com.ua/api/product-api/v4/goods/"
+        "get-main?front-type='xl&country=UA&lang=ua&goodsId="
+    )
 
     def __init__(self):
         self._logger = logging.getLogger(__name__)
         self.session = requests.Session()
         self.headers = {
             "User-Agent": UserAgent().random,
-            "Accept": "application/json, text/plain, */*"
+            "Accept": "application/json, text/plain, */*",
         }
 
     def get_item_data(self, id_product: str) -> dict | bool:
@@ -32,7 +34,8 @@ class RozetkaAPI:  # pylint: disable=too-few-public-methods
         if response.status_code != 200:
             self._logger.error(
                 "ID[%s] - Request failed with status code %s",
-                id_product, response.status_code
+                id_product,
+                response.status_code,
             )
             time.sleep(0.5)
             return False
@@ -46,7 +49,7 @@ class RozetkaAPI:  # pylint: disable=too-few-public-methods
             "href": item["data"]["href"],
             "brand": item["data"]["brand"],
             "category": item["data"]["last_category"]["title"],
-            "description": item["data"]["description"]["text"]
+            "description": item["data"]["description"]["text"],
         }
         return product_data
 
