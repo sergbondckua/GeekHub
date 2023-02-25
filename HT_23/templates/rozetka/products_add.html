@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load crispy_forms_filters %}
+{% load static %}
+
+{% block title %}
+  Add a new id to parse
+{% endblock %}
+
+{% block content %}
+  <h2 class="mb-5">Add ID's</h2>
+  <div class="row justify-content-center">
+    <div class="col-6">
+      <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="products" class="sr-only">
+            Add products ID
+          </label>
+          {{ form|crispy }}
+        </div>
+        <button type="submit" class="btn btn-success">Submit</button>
+      </form>
+    </div>
+  </div>
+{% endblock %}

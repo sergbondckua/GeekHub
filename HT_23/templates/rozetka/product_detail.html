@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+  {{ product.title }}
+{% endblock %}
+
+{% block content %}
+  <h2 class="mb-5">{{ product.title }}</h2>
+
+  <!-- Messages -->
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-success" role="alert">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <div class="row justify-content-center">
+    <div class="col-10 cart-order">
+      <ul class="list-group list-group-flush mb-5 bg-white rounded">
+        <li class="list-group-item">{{ product.brand }}</li>
+        <li class="list-group-item">{{ product.description|safe }}</li>
+        <li class="list-group-item">
+          <a target="_blank" href="{{ product.href }}">
+            {{ product.product_id }}
+          </a>
+        </li>
+        <li class="list-group-item">{{ product.category.title }}</li>
+        {% if user.is_authenticated %}
+          <li class="list-group-item">
+            {#      Add to Cart form #}
+            {% if product.price > 0 %}
+              <form id="add" action="{% url 'cart:cart_add' product.id%}" method="post"
+                    class="form-inline">
+                {% csrf_token %}
+                <div class="form-group mb-2">
+                  <h4>
+                    {% if product.price < product.old_price %}
+                      <span class="text-muted" style="text-decoration:line-through;">
+                        {{ product.old_price }} ₴
+                  </span><br>
+                      <span class="mb2 text-danger">
+                    {{ product.price }} ₴
+                  </span>
+                    {% else %}
+                      <span class="mb2">
+                    {{ product.price }} ₴
+                  </span>
+                    {% endif %}
+                  </h4>
+                </div>
+                <div class="form-group mx-sm-3 mb-2">
+                  <label for="qnt" class="sr-only">Quantity:</label>
+                  {{ cart_product_form.quantity }}
+                </div>
+                <button type="submit" class="btn btn-success mb-2">
+                  <i class="fa-solid fa-cart-plus"></i> Add to cart
+                </button>
+              </form>
+            {% else %}
+              <b>Out of stock</b>
+            {% endif %}
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+
+    {#    Actions  #}
+    {% if user.is_superuser %}
+      <div class="col-md-2">
+        <a class="btn btn-lg btn-outline-primary"
+           href="{% url 'rozetka:product-update' product.id %}">
+          <i class="fa-solid fa-pen-to-square"></i>
+        </a>
+        <a class="btn btn-lg btn-outline-danger"
+           href="{% url 'rozetka:product-delete' product.id %}">
+          <i class="fa-regular fa-trash-can"></i>
+        </a>
+      </div>
+      <p id="message"></p>
+    {% endif %}
+
+  </div>
+{% endblock %}
